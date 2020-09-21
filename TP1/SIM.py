@@ -1,5 +1,6 @@
+# Módulo de simulación creado para investigación operativa
 import matplotlib.pyplot as plt
-import scipy.stats as stats
+from scipy import stats
 from numpy import e
 from math import factorial
 
@@ -71,7 +72,7 @@ class Dist:
 
     def distSimulacion(self, rand):
         """Genera una distribución simulada a partir de una lista de probabilidades
-        
+
         Su uso es más que nada para verificar si la simulación es correcta
         """
 
@@ -83,6 +84,8 @@ class Dist:
 
 
 class DistExp(Dist):
+    """Clase distribución experimental"""
+
     def __init__(self, valores, probAcum):
         self.probAcum = probAcum
         super().__init__(valores)
@@ -113,6 +116,11 @@ class DistExp(Dist):
 
 
 class DistSimulada(DistExp):
+    """Clase distribución simulada
+
+    Representa una distribución simulada a partir de otra utilizando método Montecarlo
+    """
+
     def __init__(self, valores, frecuencias, muestra):
         self.muestra = muestra
         suma = sum(frecuencias)
@@ -128,14 +136,13 @@ class DistSimulada(DistExp):
 
 
 class DistTeoricaDiscreta(Dist):
-    epsilon = 1e-4
-
     def __init__(self, funcion, techo=0, piso=0):
         self.funcion = funcion
         self.piso = piso
-        if techo == 0:
+        if techo == None:
+            # si techo es None significa que está definida [piso;infinito)
             i = 0
-            while funcion(i) > DistTeoricaDiscreta.epsilon:
+            while funcion(i) > 1e-4:
                 i += 1
             techo = i
         self.techo = techo
