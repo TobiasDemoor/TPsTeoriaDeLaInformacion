@@ -29,10 +29,10 @@ def cantInformacion(self: Dist, dato) -> float:
     """Calcula la cantidad de información en bits de un dato dado"""
     p = self.prob(dato)
     if p == 0: 
-        ret = 0
+        retorno = 0
     else: 
-        ret = log2(1/p)
-    return ret
+        retorno = log2(1/p)
+    return retorno
 
 
 def entropia(self: Dist) -> float:
