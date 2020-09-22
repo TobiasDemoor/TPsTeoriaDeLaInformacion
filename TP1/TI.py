@@ -4,6 +4,10 @@ from math import log2
 from SIM import Dist, DistExp, DistExpFactory, DistSimulada, DistTeoricaDiscreta
 
 
+def binaria(w: float) -> DistExp:
+    """Metodo factory para una distribución binaria con P(0) = w"""
+    return DistExp([0,1], [w ,1])
+
 def secuencia(self: Dist, n: int) -> list:
     """Genera una secuencia de n valores al azar según la distribución"""
     
@@ -34,7 +38,9 @@ def reporte(self: Dist) -> pd.DataFrame:
         })
 
 #Se añaden las funciones a la clase Dist dinámicamente
+Dist.secuencia = secuencia
 Dist.cantInformacion = cantInformacion
 Dist.entropia = entropia
-Dist.secuencia = secuencia
 Dist.reporte = reporte
+
+DistExpFactory.binaria = binaria
