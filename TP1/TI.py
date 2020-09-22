@@ -28,8 +28,11 @@ def secuencia(self: Dist, n: int) -> list:
 def cantInformacion(self: Dist, dato) -> float:
     """Calcula la cantidad de información en bits de un dato dado"""
     p = self.prob(dato)
-    if p == 0: return 0
-    return -log2(p)
+    if p == 0: 
+        ret = 0
+    else: 
+        ret = log2(1/p)
+    return ret
 
 
 def entropia(self: Dist) -> float:
