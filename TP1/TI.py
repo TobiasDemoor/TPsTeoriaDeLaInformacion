@@ -27,12 +27,11 @@ def entropia(self: Dist) -> float:
 
 
 def reporte(self: Dist) -> pd.DataFrame:
-    df = pd.DataFrame({
+    return pd.DataFrame({
         "Dato":self.valores, 
         "Probabilidad":list(map(self.prob, self.valores)), 
         "Información": list(map(self.cantInformacion, self.valores))
         })
-    return df
 
 #Se añaden las funciones a la clase Dist dinámicamente
 Dist.cantInformacion = cantInformacion
