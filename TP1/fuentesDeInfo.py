@@ -15,7 +15,6 @@ def entropiaBin(w: float) -> float:
     if (w == 0) or (w == 1): return 0
     return w*-log2(w)+(1-w)*-log2(1-w)
 
-
 def secuencia(self: Dist, n: int) -> list:
     """Genera una secuencia de n valores al azar según la distribución"""
     
@@ -23,7 +22,6 @@ def secuencia(self: Dist, n: int) -> list:
     for _ in range(n):
         rand.append(random())
     return self.simulacion(rand)
-
 
 def cantInformacion(self: Dist, dato) -> float:
     """Calcula la cantidad de información en bits de un dato dado"""
@@ -34,13 +32,11 @@ def cantInformacion(self: Dist, dato) -> float:
         retorno = log2(1/p)
     return retorno
 
-
 def entropia(self: Dist) -> float:
     ent = 0
     for i in self.valores:
         ent += self.prob(i)*self.cantInformacion(i)
     return ent
-
 
 def reporte(self: Dist) -> pd.DataFrame:
     return pd.DataFrame({
