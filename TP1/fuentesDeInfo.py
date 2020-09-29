@@ -46,21 +46,19 @@ def reporte(self: Dist) -> pd.DataFrame:
         })
 
 
-def auxiliarExtension(fuente: Dist, orden:int):
-    if orden > 1:
-        valoresAnt, probAnt = auxiliarExtension(fuente, orden-1)
+def extensionDeFuente(fuente: Dist, orden:int):
+    valoresAnt, probAnt = fuente.valores, list(map(fuente.prob, fuente.valores))
+    for __ in range(1, orden):
         valores, prob = [], []
         for i, k in enumerate(valoresAnt):
             for j, l in enumerate(fuente.valores):
                 valores.append(str(k)+str(l))
                 prob.append(probAnt[i]*fuente.prob(fuente.valores[j]))
-        return valores, prob
-    else:
-        return fuente.valores, list(map(fuente.prob, fuente.valores))
+        probAnt = prob
+        valoresAnt = valores
+        
+    return DistExpFactory.fromProbAbs(valoresAnt, probAnt)
 
-def extensionDeFuente(fuente: Dist, orden: int):
-    valores, prob = auxiliarExtension(fuente, orden)
-    return DistExpFactory.fromProbAbs(valores, prob)
 
 
 
