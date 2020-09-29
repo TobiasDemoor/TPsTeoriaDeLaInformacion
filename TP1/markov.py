@@ -2,7 +2,6 @@ import numpy as np
 from math import log2
 from graphviz import Digraph
 
-
 class FuenteDeMarkov:
     def __init__(self, valores, mat):
         self.valores = valores
@@ -45,6 +44,18 @@ class FuenteDeMarkov:
                 if self.mat[i][j] != 0:
                     ent += val * self.mat[i][j] * -log2(self.mat[i][j])
         return ent
+
+    def generaSimbolos(self, rnd):
+        j = 0 #TODO: definir el primer simbolo a partir de las probabilidades totales que no tenemos
+        simbolos = []
+        for k in rnd():
+            acum = mat[0][j]
+            i = 0
+            while(acum <= k and i < len(self.mat)):
+                i += 1
+                acum += self.mat[i][j]
+            simbolos.append(self.valores[i])
+        return simbolos
 
     @property
     def grafo(self):
