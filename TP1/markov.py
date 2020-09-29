@@ -1,5 +1,6 @@
 import numpy as np
 from math import log2
+from graphviz import Digraph
 
 
 class FuenteDeMarkov:
@@ -29,7 +30,7 @@ class FuenteDeMarkov:
                     A[i][j] = 0.0
             
             B = np.zeros_like(A[0])
-            if np.all(A[-1] == 0.0):
+            if sum(map(abs, A[-1])) < 1e-10:
                 A[-1] = np.ones_like(A[0])
                 B[-1] = 1
 
@@ -41,5 +42,19 @@ class FuenteDeMarkov:
         v = self.vectorEstacionario
         for j, val in enumerate(v):
             for i in range(len(v)):
-                ent += val * self.mat[i][j] * -log2(self.mat[i][j])
+                if self.mat[i][j] != 0:
+                    ent += val * self.mat[i][j] * -log2(self.mat[i][j])
         return ent
+
+    @property
+    def grafo(self):
+        try:
+            return self.__grafo
+        except AttributeError:
+            dot = Digraph(node_attr={'shape': 'circle'})
+            for i, valO in enumerate(self.valores):
+                for j, valD in enumerate(self.valores):
+                    if self.mat[i][j] != 0:
+                        dot.edge(valO, valD, str(round(self.mat[i][j], 5)))
+            self.__grafo = dot
+            return self.__grafo
