@@ -3,7 +3,8 @@ from math import log2
 
 
 class FuenteDeMarkov:
-    def __init__(self, mat):
+    def __init__(self, valores, mat):
+        self.valores = valores
         self.mat = mat
     
     @property
@@ -42,5 +43,3 @@ class FuenteDeMarkov:
             for i in range(len(v)):
                 ent += val * self.mat[i][j] * -log2(self.mat[i][j])
         return ent
-
-        
