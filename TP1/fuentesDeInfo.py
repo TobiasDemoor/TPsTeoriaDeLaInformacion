@@ -45,6 +45,25 @@ def reporte(self: Dist) -> pd.DataFrame:
         "Información": list(map(self.cantInformacion, self.valores))
         })
 
+
+def auxiliarExtension(fuente: Dist, orden:int):
+    if orden > 1:
+        valoresAnt, probAnt = auxiliarExtension(fuente, orden-1)
+        valores, prob = [], []
+        for i, k in enumerate(valoresAnt):
+            for j, l in enumerate(fuente.valores):
+                valores.append(str(k)+str(l))
+                prob.append(probAnt[i]*fuente.prob(fuente.valores[j]))
+        return valores, prob
+    else:
+        return fuente.valores, list(map(fuente.prob, fuente.valores))
+
+def extensionDeFuente(fuente: Dist, orden: int):
+    valores, prob = auxiliarExtension(fuente, orden)
+    return DistExpFactory.fromProbAbs(valores, prob)
+
+
+
 #Se añaden las funciones a la clase Dist dinámicamente
 Dist.secuencia = secuencia
 Dist.cantInformacion = cantInformacion
