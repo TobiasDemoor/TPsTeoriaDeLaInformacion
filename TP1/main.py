@@ -2,7 +2,8 @@ import random
 import math 
 import pandas
 from fuentesDeInfo import Dist, DistExp, DistExpFactory, DistSimulada, DistTeoricaDiscreta
-
+from markov import FuenteDeMarkov
+import graphviz
 # Anexo 1
 d1 = DistExpFactory.fromProbAbs(
     ['a', 'b', 'c', 'd'],
@@ -19,17 +20,17 @@ d3 = DistExpFactory.fromProbAbs(
 
 print(f"H(S1) = {d1.entropia()}")
 print(d1.reporte())
-print(f"H(S2) = {d2.entropia()}")
+print(f"\nH(S2) = {d2.entropia()}")
 print(d2.reporte())
-print(f"H(S3) = {d3.entropia()}")
+print(f"\nH(S3) = {d3.entropia()}")
 print(d3.reporte())
 
 
-from markov import FuenteDeMarkov
+
 
 # Anexo 2
 markov1 = FuenteDeMarkov(
-    ["A", "B", "C", "D", "E"],
+    ["A", "B", "C", "D"],
     [
         [0.114, 0.0951, 0.273, 0.536 ],
         [0.0074, 0.00755, 0.236, 0.0434 ],
@@ -47,5 +48,9 @@ markov2 = FuenteDeMarkov(
         [0.105, 0.05257, 0.16461, 0.3566, 0.11]
     ])
 
-print(f"Fuente N°1: {markov1.vectorEstacionario}")
-print(f"Fuente N°2: {markov2.vectorEstacionario}")
+print(f"\nFuente N°1: {markov1.vectorEstacionario}")
+print(f"\nFuente N°2: {markov2.vectorEstacionario}")
+
+markov1.grafo.render("grafo1")
+markov2.grafo.render("grafo2")
+print("\nSe pueden visualizar los grafos en los pdf generados generados.")
