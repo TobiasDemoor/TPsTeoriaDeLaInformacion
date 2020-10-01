@@ -49,7 +49,7 @@ class FuenteDeMarkov:
         j = 0 #TODO: definir el primer simbolo a partir de las probabilidades totales que no tenemos
         simbolos = []
         for k in rnd():
-            acum = mat[0][j]
+            acum = self.mat[0][j]
             i = 0
             while(acum <= k and i < len(self.mat)):
                 i += 1

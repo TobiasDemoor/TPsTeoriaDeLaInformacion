@@ -51,6 +51,6 @@ markov2 = FuenteDeMarkov(
 print(f"\nFuente N°1: {markov1.vectorEstacionario}")
 print(f"\nFuente N°2: {markov2.vectorEstacionario}")
 
-markov1.grafo.render("grafo1")
-markov2.grafo.render("grafo2")
-print("\nSe pueden visualizar los grafos en los pdf generados generados.")
+# markov1.grafo.render("grafo1")
+# markov2.grafo.render("grafo2")
+# print("\nSe pueden visualizar los grafos en los pdf generados generados.")
