@@ -45,7 +45,6 @@ def reporte(self: Dist) -> pd.DataFrame:
         "Información": list(map(self.cantInformacion, self.valores))
         })
 
-
 def extensionDeFuente(fuente: Dist, orden:int):
     valoresAnt, probAnt = fuente.valores, list(map(fuente.prob, fuente.valores))
     for __ in range(1, orden):
@@ -59,7 +58,42 @@ def extensionDeFuente(fuente: Dist, orden:int):
         
     return DistExpFactory.fromProbAbs(valoresAnt, probAnt)
 
+def esCodBloque(alfabeto, codigos) -> bool:
+    cumple = True
+    n = len(codigos)
+    i = 0
+    while i < n and cumple:
+        cod = codigos[i]
+        nCod = len(cod)
+        j = 0
+        while j < nCod and cumple:
+            if cod[j] not in alfabeto:
+                cumple = False
+            j += 1
+        i += 1
+    return cumple
 
+def esNoSingular(codigos) -> bool:
+    n = len(codigos)
+    i = 0
+    while i < n and codigos.count(codigos[i]) == 1:
+        i += 1
+    return not i < n
+        
+def esInstantaneo(codigos) -> bool:
+    cumple = True
+    n = len(codigos)
+    i = 0
+    while i < n and cumple:
+        j = 0
+        cod = codigos[i]
+        nCod = len(cod)
+        while j < n and cumple:
+            if j != i and nCod <= len(codigos[j]) and cod in codigos[j][0:nCod]:
+                cumple = False
+            j += 1
+        i += 1
+    return cumple
 
 
 #Se añaden las funciones a la clase Dist dinámicamente
