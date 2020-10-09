@@ -58,43 +58,44 @@ def extensionDeFuente(fuente: Dist, orden:int):
         
     return DistExpFactory.fromProbAbs(valoresAnt, probAnt)
 
-def esCodBloque(alfabeto, codigos) -> bool:
-    cumple = True
-    n = len(codigos)
-    i = 0
-    while i < n and cumple:
-        cod = codigos[i]
-        nCod = len(cod)
-        j = 0
-        while j < nCod and cumple:
-            if cod[j] not in alfabeto:
-                cumple = False
-            j += 1
-        i += 1
-    return cumple
+def esCodBloque(aCodigo: list, codigoBloque: list) -> bool:
+    bloqueaux = codigoBloque[:]
+    aaux = aCodigo
+    longmax = len(max(bloqueaux, key=len))
+    it = 0
+    while len(bloqueaux) > 0 and it < longmax:
+        for i in aaux:
+            while i in bloqueaux:
+                bloqueaux.remove(i)
+        lista = []
+        for i in aaux:
+            for j in aCodigo:
+                lista.append(i + j)
+        aaux = lista
+        it += 1
+    return len(bloqueaux) == 0
 
-def esNoSingular(codigos) -> bool:
-    n = len(codigos)
-    i = 0
-    while i < n and codigos.count(codigos[i]) == 1:
-        i += 1
-    return not i < n
+def esNoSingular(codigoBloque: list) -> bool:
+    return len(set(codigoBloque)) == len(codigoBloque)
         
-def esInstantaneo(codigos) -> bool:
-    cumple = True
-    n = len(codigos)
-    i = 0
-    while i < n and cumple:
-        j = 0
-        cod = codigos[i]
-        nCod = len(cod)
-        while j < n and cumple:
-            if j != i and nCod <= len(codigos[j]) and cod in codigos[j][0:nCod]:
-                cumple = False
-            j += 1
-        i += 1
-    return cumple
-
+def esInstantaneo(codigoBloque: list) -> bool:
+    for i, x in enumerate(codigoBloque):
+        for j, y in enumerate(codigoBloque):
+            if y.find(x) == 0 and i != j:
+                return False
+    return True
+    # version fea
+    # i, cumple = 0, True
+    # largo = len(codigoBloque)
+    # while i < largo and cumple:
+    #     x, j = codigoBloque[i], 0
+    #     while j < largo and cumple:
+    #         y = codigoBloque[j]
+    #         if y.find(x) == 0 and i !=j:
+    #             cumple = False
+    #         j += 1
+    #     x += 1
+    # return cumple
 
 #Se añaden las funciones a la clase Dist dinámicamente
 Dist.secuencia = secuencia
