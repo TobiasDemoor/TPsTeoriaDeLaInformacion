@@ -60,7 +60,7 @@ def extensionDeFuente(fuente: Dist, orden:int):
 
 def esCodBloque(aCodigo: list, codigoBloque: list) -> bool:
     bloqueaux = codigoBloque[:]
-    aaux = aCodigo
+    aaux = aCodigo[:]
     longmax = len(max(bloqueaux, key=len))
     it = 0
     while len(bloqueaux) > 0 and it < longmax:
