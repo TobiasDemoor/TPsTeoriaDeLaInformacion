@@ -20,9 +20,9 @@ def longMedia(dist, codigo):
 def isCompacto(dist, codigo):
     return dist.entropia() <= longMedia(dist, codigo)
 
-def cumpleKraft(dist):
+def cumpleKraft(codigo: dict, r: int):
     suma = 0
-    for i in dist.valores:
-        suma += 2**-len(i)
-        if suma > 1: return False
+    for i in codigo.items():
+        suma += r**-len(i[1])
+        if round(suma, 2) > 1: return False
     return True
