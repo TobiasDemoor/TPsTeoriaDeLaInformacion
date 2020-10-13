@@ -104,10 +104,8 @@ class DistExp(Dist):
 
     def prob(self, x):
         res = 0
-        i = 0
-        while x > self.valores[i]:
-            i += 1
-        if self.valores[i] == x:
+        i = self.valores.index(x)
+        if i != -1:
             if i > 0:
                 res = (self.probAcum[i]-self.probAcum[i-1])
             else:

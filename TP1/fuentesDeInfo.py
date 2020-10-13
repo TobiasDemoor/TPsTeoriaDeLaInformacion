@@ -3,7 +3,6 @@ import pandas as pd
 from math import log2
 from SIM import Dist, DistExp, DistExpFactory, DistSimulada, DistTeoricaDiscreta
 
-
 def binaria(w: float) -> DistExp:
     """Método factory para una distribución binaria con P(0) = w"""
 

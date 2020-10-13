@@ -1,10 +1,10 @@
-import random
-import math 
-import pandas
-from fuentesDeInfo import Dist, DistExp, DistExpFactory, DistSimulada, DistTeoricaDiscreta
-from markov import FuenteDeMarkov
-import graphviz
 # Anexo 1
+from fuentesDeInfo import Dist, DistExp, DistExpFactory, DistSimulada, DistTeoricaDiscreta
+
+
+##################### Parte 1 ######################
+
+#### Anexo 1 ####
 d1 = DistExpFactory.fromProbAbs(
     ['a', 'b', 'c', 'd'],
     [0.605, 0.108, 0.174, 0.113]
@@ -26,15 +26,15 @@ print(f"\nH(S3) = {d3.entropia()}")
 print(d3.reporte())
 
 
+#### Anexo 2 ####
+from markov import FuenteDeMarkov
 
-
-# Anexo 2
 markov1 = FuenteDeMarkov(
     ["A", "B", "C", "D"],
     [
-        [0.114, 0.0951, 0.273, 0.536 ],
-        [0.0074, 0.00755, 0.236, 0.0434 ],
-        [0.375, 0.0847, 0.189, 0.206 ],
+        [0.114, 0.0951, 0.273, 0.536],
+        [0.0074, 0.00755, 0.236, 0.0434],
+        [0.375, 0.0847, 0.189, 0.206],
         [0.5036, 0.81265, 0.302, 0.2146]
     ])
 
@@ -51,6 +51,13 @@ markov2 = FuenteDeMarkov(
 print(f"\nFuente N°1: {markov1.vectorEstacionario}")
 print(f"\nFuente N°2: {markov2.vectorEstacionario}")
 
-# markov1.grafo.render("grafo1")
-# markov2.grafo.render("grafo2")
-# print("\nSe pueden visualizar los grafos en los pdf generados generados.")
+
+##################### Parte 2 ########################
+from codificacion import creaCodif, longMedia, isCompacto, cumpleKraft
+
+d = DistExpFactory.fromProbAbs(["S1", "S2", "S3", "S4"], [4/10, 1/10, 3/10, 2/10])
+codigo = creaCodif(d)
+print(codigo)
+print(longMedia(d, codigo))
+print(isCompacto(d, codigo))
+print(cumpleKraft(d))
