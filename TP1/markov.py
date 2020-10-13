@@ -14,27 +14,32 @@ class FuenteDeMarkov:
         except AttributeError:
             rango = len(self.mat)
             A = np.array(self.mat) - np.identity(rango)
-            for j in range(rango-1):
-                imax = j
-                for i in range(j+1,rango):
-                    if abs(A[i][j]) > abs(A[imax][j]):
-                        imax = i
-                if A[imax][j] != 0:
-                    A[j], A[imax] = A[imax], A[j]
-                else:
-                    print("F")
-                    break
-                for i in range(j+1, rango):
-                    A[i][j+1:] -= A[j][j+1:]*A[i][j]/A[j][j]
-                    A[i][j] = 0.0
-            
             B = np.zeros_like(A[0])
-            if sum(map(abs, A[-1])) < 1e-10:
-                A[-1] = np.ones_like(A[0])
-                B[-1] = 1
-
+            A[-1] = np.ones_like(A[0])
+            B[-1] = 1
             self.__vectorEstacionario = np.linalg.solve(A, B)
             return self.__vectorEstacionario
+            # for j in range(rango-1):
+            #     imax = j
+            #     for i in range(j+1,rango):
+            #         if abs(A[i][j]) > abs(A[imax][j]):
+            #             imax = i
+            #     if A[imax][j] != 0:
+            #         A[j], A[imax] = A[imax], A[j]
+            #     else:
+            #         print("F")
+            #         break
+            #     for i in range(j+1, rango):
+            #         A[i][j+1:] -= A[j][j+1:]*A[i][j]/A[j][j]
+            #         A[i][j] = 0.0
+            
+            # B = np.zeros_like(A[0])
+            # if sum(map(abs, A[-1])) < 1e-10:
+            #     A[-1] = np.ones_like(A[0])
+            #     B[-1] = 1
+
+            # self.__vectorEstacionario = np.linalg.solve(A, B)
+            # return self.__vectorEstacionario
 
     def entropia(self) -> float:
         ent = 0
