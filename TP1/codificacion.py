@@ -13,19 +13,16 @@ class CodigoBloque:
     def listaCodigos(self) -> list:
         return list(self.codigos.values())
     
-    def prob(self, id) -> float:
-        return self.fuente.probs(id)
-
-    def reporte(self) -> pd.DataFrame:
-        df = self.fuente.reporte()
-        df.insert(1, "Codigo", list(map(lambda x: self.codigos[x], self.fuente.ids)))
-        return df
-
     def longMedia(self):
         res = 0
         for i in self.fuente.ids:
             res += self.fuente.prob(i) * len(self.codigos[i])
         return res
+
+    def reporte(self) -> pd.DataFrame:
+        df = self.fuente.reporte()
+        df.insert(1, "Codigo", list(map(lambda x: self.codigos[x], self.fuente.ids)))
+        return df
 
 
 
@@ -33,13 +30,13 @@ class CodigoBloqueFactory:
     @staticmethod
     def equiprobable(ids, codigos):
         fuente = FuenteDeInfoFactory.equiprobable(ids)
-        dcodigos = {i: j for i in ids for j in codigos}
+        dcodigos = {i:j for i, j in zip(ids, codigos)}
         return CodigoBloque(fuente, dcodigos)
 
     @staticmethod
     def crear(ids, codigos, probs):
         fuente = FuenteDeInfoFactory.crear(ids, probs)
-        dcodigos = {i: j for i in ids for j in codigos}
+        dcodigos = {i:j for i, j in zip(ids, codigos)}
         return CodigoBloque(fuente, dcodigos)
 
     @staticmethod
@@ -53,6 +50,26 @@ class CodigoBloqueFactory:
             dic[k] = sig
             sig = bin(int(sig, 2)+1)[2:].zfill(v)
         return CodigoBloque(fuente, dic)
+    
+    @staticmethod
+    def extensionDeFuente(codigoBloque: CodigoBloque, orden: int) -> CodigoBloque:
+        fuente = codigoBloque.fuente
+        idAnt = fuente.ids
+        codAnt = codigoBloque.listaCodigos()
+        probAnt = [fuente.prob(i) for i in fuente.ids]
+        for _ in range(orden-1):
+            ids, cods, probs = [], [], []
+            for i, k in enumerate(idAnt):
+                for l in fuente.ids:
+                    ids.append(str(k)+str(l))
+                    cods.append(codAnt[i] + codigoBloque.codigo(l))
+                    probs.append(probAnt[i] * fuente.prob(l))
+
+            idAnt = ids
+            codAnt = cods
+            probAnt = probs
+
+        return CodigoBloqueFactory.crear(ids, cods, probs)
 
 
 def cumpleKraft(codigo: CodigoBloque, r: int):

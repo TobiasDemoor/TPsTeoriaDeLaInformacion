@@ -39,19 +39,6 @@ class FuenteDeInfo:
             ent += self.probs[i]*self.cantInformacion(i)
         return ent
 
-    def extensionDeFuente(self, orden: int):
-        idsAnt, probAnt = self.ids, [self.probs[i] for i in self.ids]
-        for _ in range(1, orden):
-            ids, prob = [], []
-            for i, k in enumerate(idsAnt):
-                for j, l in enumerate(self.ids):
-                    ids.append(str(k)+str(l))
-                    prob.append(probAnt[i]*self.prob(self.ids[j]))
-            probAnt = prob
-            idsAnt = ids
-
-        return FuenteDeInfoFactory.crear(idsAnt, probAnt)
-
     def reporte(self) -> pd.DataFrame:
         return pd.DataFrame({
             "Dato": self.ids,
@@ -72,8 +59,22 @@ class FuenteDeInfoFactory:
     def crear(ids, probs):
         """Genera un objeto FuenteDeInfo a partir de sus ids y sus probabilidades absolutas"""
 
-        dprobs = {i: j for i in ids for j in probs}
+        dprobs = {i: j for i, j in zip(ids, probs)}
         return FuenteDeInfo(ids, dprobs)
+
+    @staticmethod
+    def extensionDeFuente(fuente, orden: int):
+        idsAnt, probAnt = fuente.ids, [fuente.probs[i] for i in fuente.ids]
+        for _ in range(orden-1):
+            ids, prob = [], []
+            for i, k in enumerate(idsAnt):
+                for j, l in enumerate(fuente.ids):
+                    ids.append(str(k)+str(l))
+                    prob.append(probAnt[i]*fuente.prob(fuente.ids[j]))
+            probAnt = prob
+            idsAnt = ids
+
+        return FuenteDeInfoFactory.crear(idsAnt, probAnt)
 
     @staticmethod
     def fromFrecuencia(ids, frecuencias):
