@@ -80,7 +80,7 @@ class FuenteDeInfoFactory:
         """Genera un objeto FuenteDeInfo a partir de los ids y sus frecuencias"""
 
         suma = sum(frecuencias)
-        prob = [i/suma for i in ids]
+        prob = [i/suma for i in frecuencias]
         return FuenteDeInfoFactory.crear(ids, prob)
 
     @staticmethod
