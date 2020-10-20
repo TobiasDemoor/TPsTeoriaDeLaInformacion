@@ -1,29 +1,28 @@
 # Anexo 1
-from fuentesDeInfo import Dist, DistExp, DistExpFactory, DistSimulada, DistTeoricaDiscreta
-
+from fuentesDeInfo import FuenteDeInfo, FuenteDeInfoFactory
 
 ##################### Parte 1 ######################
 
 #### Anexo 1 ####
-d1 = DistExpFactory.fromProbAbs(
+fuente1 = FuenteDeInfoFactory.crear(
     ['a', 'b', 'c', 'd'],
     [0.605, 0.108, 0.174, 0.113]
 )
-d2 = DistExpFactory.fromProbAbs(
+fuente2 = FuenteDeInfoFactory.crear(
     ['a', 'b', 'c', 'd', 'e'],
     [0.0446, 0.211, 0.338, 0.331, 0.0754]
 )
-d3 = DistExpFactory.fromProbAbs(
+fuente3 = FuenteDeInfoFactory.crear(
     ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
     [0.142, 0.0519, 0.00323, 0.245, 0.0587, 0.387, 0.11217]
 )
 
-print(f"H(S1) = {d1.entropia()}")
-print(d1.reporte())
-print(f"\nH(S2) = {d2.entropia()}")
-print(d2.reporte())
-print(f"\nH(S3) = {d3.entropia()}")
-print(d3.reporte())
+print(f"H(S1) = {fuente1.entropia()}")
+print(fuente1.reporte())
+print(f"\nH(S2) = {fuente2.entropia()}")
+print(fuente2.reporte())
+print(f"\nH(S3) = {fuente3.entropia()}")
+print(fuente3.reporte())
 
 
 #### Anexo 2 ####
@@ -53,11 +52,11 @@ print(f"\nFuente N°2: {markov2.vectorEstacionario}")
 
 
 ##################### Parte 2 ########################
-from codificacion import creaCodif, longMedia, isCompacto, cumpleKraft
+from codificacion import CodigoBloque, CodigoBloqueFactory ,esCompacto, cumpleKraft
 
-d = DistExpFactory.fromProbAbs(["S1", "S2", "S3", "S4"], [4/10, 1/10, 3/10, 2/10])
-codigo = creaCodif(d)
-print(codigo)
-print(longMedia(d, codigo))
-print(isCompacto(d, codigo))
+fuente = FuenteDeInfoFactory.crear(["S1", "S2", "S3", "S4"], [4/10, 1/10, 3/10, 2/10])
+codigo = CodigoBloqueFactory.creaCodif(fuente)
+print(codigo.reporte())
+print(codigo.longMedia())
+print(esCompacto(codigo))
 print(cumpleKraft(codigo, 2))
