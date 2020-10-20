@@ -69,7 +69,7 @@ class CodigoBloqueFactory:
             codAnt = cods
             probAnt = probs
 
-        return CodigoBloqueFactory.crear(ids, cods, probs)
+        return CodigoBloqueFactory.crear(idAnt, codAnt, probAnt)
 
 
 def cumpleKraft(codigo: CodigoBloque, r: int):
