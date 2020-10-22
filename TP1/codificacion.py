@@ -51,7 +51,7 @@ class CodigoBloqueFactory:
                 sig += "0" * (v-ant)
                 ant = v
             dic[k] = sig
-            sig = bin(int(sig, 2)+1)[2:].zfill(v)
+            sig = bin(int(sig, 2)+1)[2:].zfill(v) #bin() devuelve "0bXXXXX" por lo que omitimos los dos primeros valores 
         return CodigoBloque(fuente, dic)
     
     @staticmethod
