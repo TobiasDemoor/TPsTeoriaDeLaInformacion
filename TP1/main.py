@@ -23,6 +23,7 @@ print(f"\nH(S2) = {fuente2.entropia()}")
 print(fuente2.reporte())
 print(f"\nH(S3) = {fuente3.entropia()}")
 print(fuente3.reporte())
+print("\n")
 
 
 #### Anexo 2 ####
@@ -49,6 +50,7 @@ markov2 = FuenteDeMarkov(
 
 print(f"\nFuente N°1: {markov1.vectorEstacionario}")
 print(f"\nFuente N°2: {markov2.vectorEstacionario}")
+print("\n")
 
 
 ##################### Parte 2 ########################
@@ -57,6 +59,6 @@ from codificacion import CodigoBloque, CodigoBloqueFactory ,esCompacto, cumpleKr
 fuente = FuenteDeInfoFactory.crear(["S1", "S2", "S3", "S4"], [4/10, 1/10, 3/10, 2/10])
 codigo = CodigoBloqueFactory.creaCodif(fuente)
 print(codigo.reporte())
-print(codigo.longMedia())
-print(esCompacto(codigo))
-print(cumpleKraft(codigo, 2))
+print(f"\nLongitud media: {codigo.longMedia()}")
+print(f"Es compacto: {esCompacto(codigo)}")
+print(f"Cumple la inecuación de kraft: {cumpleKraft(codigo, 2)}")

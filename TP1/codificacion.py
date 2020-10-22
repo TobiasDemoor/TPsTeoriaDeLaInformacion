@@ -76,12 +76,16 @@ def cumpleKraft(codigo: CodigoBloque, r: int):
     suma = 0
     for i in codigo.listaCodigos():
         suma += r**-len(i)
-        if round(suma, 2) > 1: return False
+        if round(suma, 2) > 1:
+            return False
     return True
 
     
 def esCompacto(codigo: CodigoBloque):
-    return codigo.fuente.entropia() <= codigo.longMedia()
+    for i  in codigo.fuente.ids:
+        if len(codigo.codigo(i)) != ceil(-log2(codigo.fuente.prob(i))):
+            return False
+    return True
 
 
 def esCodBloque(aCodigo: list, codigo: CodigoBloque) -> bool:
