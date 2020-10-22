@@ -20,9 +20,12 @@ class CodigoBloque:
         return res
 
     def reporte(self) -> pd.DataFrame:
-        df = self.fuente.reporte()
+        entropia, df = self.fuente.reporte()
         df.insert(1, "Codigo", list(map(lambda x: self.codigos[x], self.fuente.ids)))
-        return df
+        longM = f"Longitud media: {self.longMedia()}\n"
+        comp = f"Es compacto: {esCompacto(self)}\n"
+        kraft = f"Cumple Kraft: {cumpleKraft(self, 2)}\n"
+        return entropia, longM, comp, kraft,  df
 
 
 

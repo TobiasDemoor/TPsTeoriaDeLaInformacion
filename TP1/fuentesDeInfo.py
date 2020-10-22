@@ -40,11 +40,12 @@ class FuenteDeInfo:
         return ent
 
     def reporte(self) -> pd.DataFrame:
-        return pd.DataFrame({
-            "Símbolo": self.ids,
-            "Probabilidad": [self.probs[i] for i in self.ids],
-            "Información": [self.cantInformacion(i) for i in self.ids]
-        })
+        return (f"H(S) = {self.entropia()}\n",
+            pd.DataFrame({
+                "Símbolo": self.ids,
+                "Probabilidad": [self.probs[i] for i in self.ids],
+                "Información": [self.cantInformacion(i) for i in self.ids]
+            }))
 
 
 class FuenteDeInfoFactory:
