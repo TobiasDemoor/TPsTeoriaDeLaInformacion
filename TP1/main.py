@@ -17,10 +17,15 @@ fuente3 = FuenteDeInfoFactory.crear(
     [0.142, 0.0519, 0.00323, 0.245, 0.0587, 0.387, 0.11217]
 )
 
+n = 100
+
+print(fuente1.simulacion(n))
+print(fuente2.simulacion(n))
+print(fuente3.simulacion(n))
+
 print(*fuente1.reporte())
 print(*fuente2.reporte())
 print(*fuente3.reporte())
-
 
 #### Anexo 2 ####
 from markov import FuenteDeMarkov
@@ -54,7 +59,5 @@ from codificacion import CodigoBloque, CodigoBloqueFactory ,esCompacto, cumpleKr
 
 fuente = FuenteDeInfoFactory.crear(["S1", "S2", "S3", "S4"], [4/10, 1/10, 3/10, 2/10])
 codigo = CodigoBloqueFactory.creaCodif(fuente)
+
 print(*codigo.reporte())
-# print(f"\nLongitud media: {codigo.longMedia()}")
-# print(f"Es compacto: {esCompacto(codigo)}")
-# print(f"Cumple la inecuación de kraft: {cumpleKraft(codigo, 2)}")

@@ -48,10 +48,11 @@ class CodigoBloqueFactory:
         sig, ant = "", 0
         for k, v in sorted(dic.items(), key = lambda x: x[1]):
             if v != ant:
-                sig += "0" * (v-ant)
+                sig += "0" * (v - ant)
                 ant = v
             dic[k] = sig
-            sig = bin(int(sig, 2)+1)[2:].zfill(v) #bin() devuelve "0bXXXXX" por lo que omitimos los dos primeros valores 
+            # bin() devuelve "0bXXXXX" por lo que omitimos los dos primeros valores 
+            sig = bin(int(sig, 2)+1)[2:].zfill(v)
         return CodigoBloque(fuente, dic)
     
     @staticmethod
@@ -86,7 +87,7 @@ def cumpleKraft(codigo: CodigoBloque, r: int):
     
 def esCompacto(codigo: CodigoBloque):
     for i  in codigo.fuente.ids:
-        if len(codigo.codigo(i)) != ceil(-log2(codigo.fuente.prob(i))):
+        if len(codigo.codigo(i)) > ceil(-log2(codigo.fuente.prob(i))):
             return False
     return True
 
