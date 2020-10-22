@@ -40,7 +40,7 @@ class FuenteDeInfo:
         return ent
 
     def reporte(self) -> pd.DataFrame:
-        return (f"H(S) = {self.entropia()}\n",
+        return (f"\nH(S) = {self.entropia()}\n",
             pd.DataFrame({
                 "Símbolo": self.ids,
                 "Probabilidad": [self.probs[i] for i in self.ids],

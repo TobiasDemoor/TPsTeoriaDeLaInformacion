@@ -18,11 +18,8 @@ fuente3 = FuenteDeInfoFactory.crear(
 )
 
 print(*fuente1.reporte())
-print("")
 print(*fuente2.reporte())
-print("")
 print(*fuente3.reporte())
-print("")
 
 
 #### Anexo 2 ####
