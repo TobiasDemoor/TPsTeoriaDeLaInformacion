@@ -41,7 +41,7 @@ class FuenteDeInfo:
 
     def reporte(self) -> pd.DataFrame:
         return pd.DataFrame({
-            "Dato": self.ids,
+            "Símbolo": self.ids,
             "Probabilidad": [self.probs[i] for i in self.ids],
             "Información": [self.cantInformacion(i) for i in self.ids]
         })

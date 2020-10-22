@@ -3,8 +3,8 @@ from math import log2
 from graphviz import Digraph
 
 class FuenteDeMarkov:
-    def __init__(self, valores, mat):
-        self.valores = valores
+    def __init__(self, ids, mat):
+        self.ids = ids
         self.mat = mat
     
     @property
@@ -19,6 +19,7 @@ class FuenteDeMarkov:
             B[-1] = 1
             self.__vectorEstacionario = np.linalg.solve(A, B)
             return self.__vectorEstacionario
+    
 
     def entropia(self) -> float:
         ent = 0
@@ -35,8 +36,8 @@ class FuenteDeMarkov:
             return self.__grafo
         except AttributeError:
             dot = Digraph(node_attr={'shape': 'circle'})
-            for i, valO in enumerate(self.valores):
-                for j, valD in enumerate(self.valores):
+            for i, valO in enumerate(self.ids):
+                for j, valD in enumerate(self.ids):
                     if self.mat[i][j] != 0:
                         dot.edge(valO, valD, str(round(self.mat[i][j], 5)))
             self.__grafo = dot
