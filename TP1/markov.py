@@ -3,12 +3,16 @@ from math import log2
 from graphviz import Digraph
 
 class FuenteDeMarkov:
+    """Clase que representa una fuente de Markov de memoria 1"""
+
     def __init__(self, ids, mat):
         self.ids = ids
         self.mat = mat
     
     @property
     def vectorEstacionario(self) -> np.ndarray:
+        """Vector estacionario de la fuente"""
+
         try:
             return self.__vectorEstacionario
         except AttributeError:
@@ -22,6 +26,7 @@ class FuenteDeMarkov:
     
 
     def entropia(self) -> float:
+        """Calcula la entropia de la fuente"""
         ent = 0
         v = self.vectorEstacionario
         for j, val in enumerate(v):
@@ -31,7 +36,8 @@ class FuenteDeMarkov:
         return ent
 
     @property
-    def grafo(self):
+    def grafo(self) -> Digraph:
+        """Grafo que representa la fuente"""
         try:
             return self.__grafo
         except AttributeError:

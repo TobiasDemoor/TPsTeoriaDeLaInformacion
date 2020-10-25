@@ -1,14 +1,18 @@
 from random import random
 import pandas as pd
 from math import log2
+import scipy.stats as stats
+import matplotlib.pyplot as plt
 
 
 class FuenteDeInfo:
+    """Clase que representa una fuente de información de memoria nula"""
     def __init__(self, ids, probs):
         self.ids = ids
         self.probs = probs
 
     def prob(self, id) -> float:
+        """Retorna la probabilidad de un símbolo id"""
         return self.probs[id]
 
     def __inversa(self, prob):
@@ -22,11 +26,13 @@ class FuenteDeInfo:
 
     def simulacion(self, n):
         """Genera una colección de valores a partir de una lista de probabilidades"""
+
         return [self.__inversa(random()) for _ in range(n)]
 
     def cantInformacion(self, id) -> float:
         """Calcula la cantidad de información en bits de un dato dado"""
-        p = self.probs[id]
+
+        p = self.prob(id)
         if p == 0:
             retorno = 0
         else:
@@ -34,12 +40,23 @@ class FuenteDeInfo:
         return retorno
 
     def entropia(self) -> float:
+        """Calcula la entropia de la fuente"""
+
         ent = 0
         for i in self.ids:
-            ent += self.probs[i]*self.cantInformacion(i)
+            ent += self.prob(i)*self.cantInformacion(i)
         return ent
 
-    def reporte(self) -> pd.DataFrame:
+    def reporte(self) -> tuple:
+        """
+            Genera un reporte de la fuente
+            Retorna una tupla como al siguiente
+            (
+                reporte entropia: string,
+                tabla de reporte por simbolo: pandas.Dataframe
+            )
+        """
+
         return (f"\nH(S) = {self.entropia()}\n",
             pd.DataFrame({
                 "Símbolo": self.ids,
@@ -52,6 +69,8 @@ class FuenteDeInfoFactory:
 
     @staticmethod
     def equiprobable(ids):
+        """Genera un objeto FuenteDeInfo a partir de sus ids siendo todos equiprobables"""
+
         p = len(ids)/2
         dprobs = {i: p for i in ids}
         return FuenteDeInfo(ids, dprobs)
@@ -65,6 +84,8 @@ class FuenteDeInfoFactory:
 
     @staticmethod
     def extensionDeFuente(fuente, orden: int):
+        """Genera un objeto FuenteDeInfo extension de la fuente "fuente" de orden "orden" """
+
         idsAnt, probAnt = fuente.ids, [fuente.probs[i] for i in fuente.ids]
         for _ in range(orden-1):
             ids, prob = [], []
@@ -108,3 +129,18 @@ def entropiaBin(w: float) -> float:
     if (w == 0) or (w == 1):
         return 0
     return w*-log2(w)+(1-w)*-log2(1-w)
+
+
+def regr(x, y):
+    """
+        Método para realizar una regresión lineal retorna la pendiente(m), la ordenada al origen(b)
+        y el coeficiente de correlación(r)
+    """
+
+    m, b, r, _ = stats.linregress(x, y)
+    plt.plot(x, y, 'o')
+    ajust = []
+    for i in x:
+        ajust.append(b + m*i)
+    plt.plot(x, ajust, 'r')
+    return m, b, r
