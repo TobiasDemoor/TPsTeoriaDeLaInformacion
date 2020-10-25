@@ -62,7 +62,7 @@ print("\n")
 
 
 ##################### Parte 2 ########################
-from codificacion import CodigoBloque, CodigoBloqueFactory ,esCompacto, cumpleKraft
+from codificacion import CodigoBloque, CodigoBloqueFactory
 
 fuente = FuenteDeInfoFactory.crear(["S1", "S2", "S3", "S4"], [4/10, 1/10, 3/10, 2/10])
 codigo = CodigoBloqueFactory.creaCodif(fuente)

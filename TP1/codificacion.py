@@ -159,7 +159,7 @@ def esInstantaneo(codigoBloque: CodigoBloque) -> bool:
     codigos = codigoBloque.listaCodigos()
     for i, x in enumerate(codigos):
         for j, y in enumerate(codigos):
-            if y.find(x) == 0 and i != j:
+            if i != j and y.startswith(x):
                 return False
     return True
 
