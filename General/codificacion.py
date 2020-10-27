@@ -146,7 +146,7 @@ class CodigoBloqueFactory:
         return CodigoBloque(fuente, codigo)
 
     @staticmethod
-    def __shannonFanoRec(probs: dict, tope: float):
+    def __shannonFanoRec(probs: dict, tope: float) -> dict:
         orden = list(probs.keys())
         orden.sort(reverse=True, key=lambda x: probs[x])
         l = len(orden)
