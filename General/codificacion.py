@@ -19,9 +19,6 @@ class CodigoBloque:
         """Retorna los códigos del código bloque en una lista"""
 
         return list(self.codigos.values())
-    
-    def entropia(self) -> float:
-        return self.fuente.entropia()
 
     def longMedia(self):
         """Calcula la longitud media del Código Bloque"""
@@ -54,6 +51,16 @@ class CodigoBloque:
 
 
 class CodigoBloqueFactory:
+    @staticmethod
+    def equiprobable(ids: list, codigos: list) -> CodigoBloque:
+        """
+            Genera un objeto CodigoBloque a partir de sus ids y
+            codigos asociados siendo todos equiprobables
+        """
+
+        fuente = FuenteDeInfoFactory.equiprobable(ids)
+        dcodigos = {i:j for i, j in zip(ids, codigos)}
+        return CodigoBloque(fuente, dcodigos)
 
     @staticmethod
     def crear(ids: list, codigos: list, probs: list) -> CodigoBloque:
@@ -84,13 +91,31 @@ class CodigoBloqueFactory:
             # bin() devuelve "0bXXXXX" por lo que omitimos los dos primeros valores 
             sig = bin(int(sig, 2)+1)[2:].zfill(v)
         return CodigoBloque(fuente, dic)
-
     
-def esCompacto(codigo: CodigoBloque) -> bool:
-    for i  in codigo.fuente.ids:
-        if len(codigo.codigo(i)) > ceil(codigo.fuente.cantInformacion(i)):
-            return False
-    return True
+    @staticmethod
+    def extensionDeFuente(codigoBloque: CodigoBloque, orden: int) -> CodigoBloque:
+        """
+            Genera un objeto CodigoBloque extension del codigo bloque "codigoBloque"
+            de orden "orden"
+        """
+
+        fuente = codigoBloque.fuente
+        idAnt = fuente.ids
+        codAnt = codigoBloque.listaCodigos()
+        probAnt = [fuente.prob(i) for i in fuente.ids]
+        for _ in range(orden-1):
+            ids, cods, probs = [], [], []
+            for i, k in enumerate(idAnt):
+                for l in fuente.ids:
+                    ids.append(str(k)+str(l))
+                    cods.append(codAnt[i] + codigoBloque.codigo(l))
+                    probs.append(probAnt[i] * fuente.prob(l))
+
+            idAnt = ids
+            codAnt = cods
+            probAnt = probs
+
+        return CodigoBloqueFactory.crear(idAnt, codAnt, probAnt)
 
 
 def cumpleKraft(codigo: CodigoBloque, r: int) -> bool:
@@ -101,5 +126,40 @@ def cumpleKraft(codigo: CodigoBloque, r: int) -> bool:
             return False
     return True
 
+    
+def esCompacto(codigo: CodigoBloque) -> bool:
+    for i  in codigo.fuente.ids:
+        if len(codigo.codigo(i)) > ceil(codigo.fuente.cantInformacion(i)):
+            return False
+    return True
 
+
+def esCodBloque(aCodigo: list, codigo: CodigoBloque) -> bool:
+    bloqueaux = codigo.listaCodigos()[:]
+    aaux = aCodigo[:]
+    longmax = len(max(bloqueaux, key=len))
+    it = 0
+    while len(bloqueaux) > 0 and it < longmax:
+        # remuevo instancias de la extension de orden it+1 del alfabeto
+        for i in aaux:
+            while i in bloqueaux:
+                bloqueaux.remove(i)
+        # genero la extension de orden it+2 del alfabeto
+        aaux = [i + j for i in aaux for j in aCodigo]
+        it += 1
+    return len(bloqueaux) == 0
+
+
+def esNoSingular(codigoBloque: CodigoBloque) -> bool:
+    codigos = codigoBloque.listaCodigos()
+    return len(set(codigos)) == len(codigos)
+
+
+def esInstantaneo(codigoBloque: CodigoBloque) -> bool:
+    codigos = codigoBloque.listaCodigos()
+    for i, x in enumerate(codigos):
+        for j, y in enumerate(codigos):
+            if i != j and y.startswith(x):
+                return False
+    return True
 

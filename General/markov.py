@@ -1,5 +1,6 @@
 import numpy as np
 from math import log2
+from graphviz import Digraph
 
 class FuenteDeMarkov:
     """Clase que representa una fuente de Markov de memoria 1"""
@@ -33,3 +34,17 @@ class FuenteDeMarkov:
                 if self.mat[i][j] != 0:
                     ent += val * self.mat[i][j] * -log2(self.mat[i][j])
         return ent
+
+    @property
+    def grafo(self) -> Digraph:
+        """Grafo que representa la fuente"""
+        try:
+            return self.__grafo
+        except AttributeError:
+            dot = Digraph(node_attr={'shape': 'circle'})
+            for i, valO in enumerate(self.ids):
+                for j, valD in enumerate(self.ids):
+                    if self.mat[i][j] != 0:
+                        dot.edge(valO, valD, str(round(self.mat[i][j], 5)))
+            self.__grafo = dot
+            return self.__grafo

@@ -17,34 +17,15 @@ fuente3 = FuenteDeInfoFactory.crear(
     [0.142, 0.0519, 0.00323, 0.245, 0.0587, 0.387, 0.11217]
 )
 
-
 n = 100
 
-fuente1SimVal = fuente1.simulacion(n)
-fuente2SimVal = fuente2.simulacion(n)
-fuente3SimVal = fuente3.simulacion(n)
+# print(fuente1.simulacion(n))
+# print(fuente2.simulacion(n))
+# print(fuente3.simulacion(n))
 
-fuente1Sim = FuenteDeInfoFactory.fromMuestra(fuente1SimVal)
-fuente2Sim = FuenteDeInfoFactory.fromMuestra(fuente2SimVal)
-fuente3Sim = FuenteDeInfoFactory.fromMuestra(fuente3SimVal)
-
-print("Fuentes dadas:")
-print(*fuente1.reporte())
-print(*fuente2.reporte())
-print(*fuente3.reporte())
-
-print("\n")
-
-print(f"Valores simulados fuente 1: {fuente1SimVal}")
-print(f"Valores simulados fuente 2: {fuente2SimVal}")
-print(f"Valores simulados fuente 3: {fuente3SimVal}")
-
-print("\n")
-
-print("Fuentes simuladas:")
-print(*fuente1Sim.reporte())
-print(*fuente2Sim.reporte())
-print(*fuente3Sim.reporte())
+# print(*fuente1.reporte())
+# print(*fuente2.reporte())
+# print(*fuente3.reporte())
 
 #### Anexo 2 ####
 from markov import FuenteDeMarkov
@@ -68,10 +49,13 @@ markov2 = FuenteDeMarkov(
         [0.105, 0.05257, 0.16461, 0.3566, 0.11]
     ])
 
-
+# markov1.grafo.render("1", format="png")
+# markov2.grafo.render("2", format="png")
 print(markov1.entropia())
 print(markov2.entropia())
 
+# import sys
+# sys.exit(0)
 print(f"\nFuente N°1: {markov1.vectorEstacionario}")
 print(f"\nFuente N°2: {markov2.vectorEstacionario}")
 print("\n")
@@ -83,8 +67,8 @@ from codificacion import CodigoBloque, CodigoBloqueFactory
 fuente = FuenteDeInfoFactory.crear(["S1", "S2", "S3", "S4"], [4/10, 1/10, 3/10, 2/10])
 codigo = CodigoBloqueFactory.creaCodif(fuente)
 print(*codigo.reporte())
-
-codigomanual = CodigoBloqueFactory.crear(
+codigo = CodigoBloqueFactory.crear(
     ["S1", "S2", "S3", "S4"], ["0", "111", "10", "110"], [4/10, 1/10, 3/10, 2/10]
 )
+# codigo.reporte()[1].to_excel("1.xlsx")
 print(*codigo.reporte())

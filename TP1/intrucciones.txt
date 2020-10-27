@@ -1,0 +1,15 @@
+Nota: en linux usar "python3" en vez de "python" para todos los comandos
+
+Prerequisito: tener python 3 instalado (en linux viene preinstalado, verificar con $ python -v)
+
+En una instancia de consola se situan en el directorio del proyecto (TP1) y ejecutan
+los siguientes comandos:
+
+$ python -m venv .\environment
+$ .\environment\Scripts\activate
+$ pip install -r requirements.txt
+$ python main.py
+
+
+Para salir del virtual environment se ejecuta el comando:
+$ deactivate
