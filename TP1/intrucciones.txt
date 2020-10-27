@@ -1,6 +1,6 @@
 Nota: en linux usar "python3" en vez de "python" para todos los comandos
 
-Prerequisito: tener python 3 instalado (en linux viene preinstalado, verificar con $ python -v)
+Prerequisito: tener python 3 instalado (en linux viene preinstalado, verificar con $ python --version)
 
 En una instancia de consola se situan en el directorio del proyecto (TP1) y ejecutan
 los siguientes comandos:
