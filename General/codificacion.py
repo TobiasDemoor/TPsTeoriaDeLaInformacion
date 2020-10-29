@@ -130,8 +130,8 @@ class CodigoBloqueFactory:
             del probs[combinados[1]]
             res = CodigoBloqueFactory.__huffmanRec(probs)
             codComb = res[combinados[0]]
-            res[combinados[0]] = codComb + "0"
-            res[combinados[1]] = codComb + "1"
+            res[combinados[0]] = codComb + "1"
+            res[combinados[1]] = codComb + "0"
         else:
             if l == 2:
                 res = {orden[0]: "1", orden[1]: "0"}
