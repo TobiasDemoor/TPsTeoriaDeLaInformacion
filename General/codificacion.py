@@ -151,21 +151,22 @@ class CodigoBloqueFactory:
         orden.sort(reverse=True, key=lambda x: probs[x])
         l = len(orden)
         if l > 2:
-            t, suma = 0, 0
+            t, suma = -1, 0
             dif, minimo = 1, 2
             while dif < minimo:
-                suma += probs[orden[t]]
                 t += 1
+                sumaAux = suma
+                suma += probs[orden[t]]
                 minimo, dif = dif, abs(tope - 2*suma)
 
             menoresDict = {orden[k]: probs[orden[k]] for k in range(t)}
             mayoresDict = {orden[k]: probs[orden[k]] for k in range(t, l)}
             res = {}
-            resAux = CodigoBloqueFactory.__shannonFanoRec(menoresDict, suma)
+            resAux = CodigoBloqueFactory.__shannonFanoRec(menoresDict, sumaAux)
             for k, v in list(resAux.items()):
                 res[k] = "1" + v
 
-            resAux = CodigoBloqueFactory.__shannonFanoRec(mayoresDict, tope - suma)
+            resAux = CodigoBloqueFactory.__shannonFanoRec(mayoresDict, tope - sumaAux)
             for k, v in list(resAux.items()):
                 res[k] = "0" + v
         else:
