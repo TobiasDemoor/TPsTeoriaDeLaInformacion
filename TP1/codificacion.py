@@ -31,6 +31,12 @@ class CodigoBloque:
             res += self.fuente.prob(i) * len(self.codigos[i])
         return res
 
+    def rendimiento(self):
+        return self.fuente.entropia()/self.longMedia()
+
+    def redundancia(self):
+        return 1-self.rendimiento()
+        
     def reporte(self) -> tuple:
         """
             Genera un reporte del Código Bloque
