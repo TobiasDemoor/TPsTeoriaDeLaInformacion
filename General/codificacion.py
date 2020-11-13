@@ -19,7 +19,26 @@ class CodigoBloque:
         """Retorna los códigos del código bloque en una lista"""
 
         return list(self.codigos.values())
+    def codifica(self, mensaje: str) -> str:
+        res = ""
+        for c in mensaje.lower():
+            if c in self.fuente.ids:
+                res += self.codigo(c)
+            else:
+                return "simbolo solicitado no existe" 
+        return res
 
+    def decodifica(self, codificado: str):
+        codigos = self.listaCodigos()
+        ids = list(self.codigos.keys())
+        cod, res = "", ""
+        for c in codificado:
+            cod += c
+            if cod in codigos:
+                res += ids[codigos.index(c)]
+                cod = ""
+        return res
+    
     def longMedia(self):
         """Calcula la longitud media del Código Bloque"""
 
@@ -254,3 +273,26 @@ def esInstantaneo(codigoBloque: CodigoBloque) -> bool:
 
 # # print(*CodigoBloqueFactory.huffman(fuente).reporte())
 # print(*CodigoBloqueFactory.shannonFano(fuente).reporte())
+def decoRLC(codificado: str):
+    res, i = "", 0
+    while i < len(codificado):
+        cant = re.search(r'\d+', codificado[i:]).group()
+        i += len(cant)
+        c = codificado[i]
+        i += 1
+        res += c * int(cant)
+    return res
+
+
+def codificaRLC(message: str):
+    res, ant = "", None
+    for c in message:
+        if c != ant:
+            if ant:
+                res += str(cant) + ant
+            ant, cant = c, 1
+        else:
+            cant += 1
+    if ant:
+        res += str(cant) + ant
+    return res
