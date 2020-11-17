@@ -78,7 +78,7 @@ class FuenteDeInfoFactory:
     @staticmethod
     def crear(ids, probs):
         """Genera un objeto FuenteDeInfo a partir de sus ids y sus probabilidades absolutas"""
-
+        
         dprobs = {i: j for i, j in zip(ids, probs)}
         return FuenteDeInfo(ids, dprobs)
 
@@ -110,10 +110,9 @@ class FuenteDeInfoFactory:
     def fromMuestra(muestra):
         """Genera un objeto FuenteDeInfo a partir de una muestra"""
 
-        ids = list(set(muestra))
-        ids.sort()
+        ids = sorted(set(muestra))
         cant = len(muestra)
-        prob = list(map(lambda x: muestra.count(x)/cant, ids))
+        prob = [muestra.count(x)/cant for x in ids]
         return FuenteDeInfoFactory.crear(ids, prob)
 
     @staticmethod

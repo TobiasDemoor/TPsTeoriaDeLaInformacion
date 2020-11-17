@@ -1,6 +1,6 @@
 from math import ceil
 from fuentesDeInfo import FuenteDeInfo, FuenteDeInfoFactory
-import pandas as pd
+import re
 
 
 class CodigoBloque:
@@ -19,13 +19,14 @@ class CodigoBloque:
         """Retorna los códigos del código bloque en una lista"""
 
         return list(self.codigos.values())
+
     def codifica(self, mensaje: str) -> str:
         res = ""
         for c in mensaje.lower():
             if c in self.fuente.ids:
                 res += self.codigo(c)
             else:
-                return "simbolo solicitado no existe" 
+                raise Exception(f"El simbolo {c} no existe en el CodigoBloque")
         return res
 
     def decodifica(self, codificado: str):
@@ -170,6 +171,7 @@ class CodigoBloqueFactory:
         orden.sort(reverse=True, key=lambda x: probs[x])
         l = len(orden)
         if l > 2:
+            sumaAux = 0
             t, suma = -1, 0
             dif, minimo = 1, 2
             while dif < minimo:
@@ -249,30 +251,6 @@ def esInstantaneo(codigoBloque: CodigoBloque) -> bool:
     return True
 
 
-# fuente = FuenteDeInfo(["s1", "s2", "s3", "s4"], {
-#     "s1": 0.6,
-#     "s2": 0.2,
-#     "s3": 0.1,
-#     "s4": 0.1
-# })
-
-# fuente = FuenteDeInfoFactory.crear(
-#     ["S1", "S2", "S3", "S4"], [4/10, 1/10, 3/10, 2/10])
-
-
-# fuente = FuenteDeInfo(["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"], {
-#     "s1": 0.40,
-#     "s2": 0.20,
-#     "s3": 0.15,
-#     "s4": 0.10,
-#     "s5": 0.06,
-#     "s6": 0.04,
-#     "s7": 0.03,
-#     "s8": 0.02
-# })
-
-# # print(*CodigoBloqueFactory.huffman(fuente).reporte())
-# print(*CodigoBloqueFactory.shannonFano(fuente).reporte())
 def decoRLC(codificado: str):
     res, i = "", 0
     while i < len(codificado):
@@ -285,14 +263,20 @@ def decoRLC(codificado: str):
 
 
 def codificaRLC(message: str):
-    res, ant = "", None
+    res, ant, cant = "", None, None
     for c in message:
         if c != ant:
-            if ant:
+            if ant != None:
                 res += str(cant) + ant
             ant, cant = c, 1
         else:
             cant += 1
-    if ant:
+    if ant != None:
         res += str(cant) + ant
     return res
+
+def rendimiento(codigo):
+    return codigo.fuente.entropia()/codigo.longMedia()
+
+def redundancia(codigo):
+    return 1 - rendimiento(codigo)
