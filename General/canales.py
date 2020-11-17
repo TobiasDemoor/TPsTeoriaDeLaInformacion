@@ -8,6 +8,18 @@ class Canal:
         self.probIn = probIn
         
     @property
+    def probOut(self) -> dict:
+        try:
+            return self.__probOut
+        except AttributeError:
+            self.__probOut = {
+                j: sum(
+                    [ self.mat[i][j] * self.probIn[i] for i in self.simbIn ]
+                ) for j in self.simbOut
+            }
+            return self.__probOut
+
+    @property
     def aPriori(self) -> dict:
         return self.probIn
 
@@ -15,21 +27,19 @@ class Canal:
     def aPosteriori(self) -> dict:
         try:
             return self.__aPosteriori
-        except ValueError:
+        except AttributeError:
             simbIn = self.simbIn
             simbOut = self.simbOut
             probIn = self.probIn
+            probOut = self.probOut
             mat = self.mat
 
-            prob = {}
-            for i in simbIn:
-                prob[i] = {}
-                for j in simbOut:
-                    prob[i][j] = mat[i][j] * probIn[i] / sum(
-                        [mat[i][j] * probIn[i] for i in simbIn]
-                    )
-
-            self.__aPosteriori = prob
+            self.__aPosteriori = {
+                i: {
+                    j: mat[i][j] * probIn[i] / probOut[j] for j in simbOut
+                } for i in simbIn
+            }
+        
             return self.__aPosteriori
 
     @property
@@ -37,18 +47,29 @@ class Canal:
         entropia = 0
         for i in self.simbIn:
             if self.probIn[i] != 0:
-                entropia += -self.purobIn[i] * log2(self.probIn[i])
+                entropia += -self.probIn[i] * log2(self.probIn[i])
         return entropia
 
     def entropiaAPosteriori(self, j: str) -> float:
         entropia = 0
         for i in self.simbIn:
-            entropia += -self.mat[i][j] * log2(self.mat[i][j]) 
+            if self.mat[i][j] != 0:
+                entropia += -self.mat[i][j] * log2(self.mat[i][j]) 
         return entropia
+    
+    @property
+    def entropiasAPosteriori(self) -> dict:
+        return {j: self.entropiaAPosteriori(j) for j in self.simbOut}
     
     
     def probSimultanea(self, a: str, b: str) -> float:
         return self.mat[a][b] * self.probIn[a]
+    
+    
+    @property
+    def probSimultaneas(self) -> dict:
+        return {i: {j: self.probSimultanea(i,j) for j in self.simbOut} for i in self.simbIn}
+    
 
 
 class CanalFactory:
