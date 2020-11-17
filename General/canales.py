@@ -54,8 +54,8 @@ class Canal:
 class CanalFactory:
     @staticmethod
     def fromMat(simbIn: list, simbOut: list, mat: list, probIn: list) -> Canal:
-        simbInSet = sorted(set(simbIn))
-        simbOutSet = sorted(set(simbOut))
+        simbInSet = set(simbIn)
+        simbOutSet = set(simbOut)
 
         matC = {
             si: {
