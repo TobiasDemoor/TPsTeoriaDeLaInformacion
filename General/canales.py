@@ -8,25 +8,25 @@ class Canal:
         self.probIn = probIn
         
     @property
-    def aPosteriori(self) -> dict:
+    def probOut(self) -> dict:
         try:
-            return self.__aPosteriori
+            return self.__probOut
         except AttributeError:
-            self.__aPosteriori = {
+            self.__probOut = {
                 j: sum(
                     [ self.mat[i][j] * self.probIn[i] for i in self.simbIn ]
                 ) for j in self.simbOut
             }
-            return self.__aPosteriori
+            return self.__probOut
 
     @property
     def aPriori(self) -> dict:
         return self.probIn
 
     @property
-    def matAPosteriori(self) -> dict:
+    def aPosteriori(self) -> dict:
         try:
-            return self.__matAPosteriori
+            return self.__aPosteriori
         except AttributeError:
             simbIn = self.simbIn
             simbOut = self.simbOut
@@ -34,13 +34,13 @@ class Canal:
             probOut = self.probOut
             mat = self.mat
 
-            self.__matAPosteriori = {
+            self.__aPosteriori = {
                 i: {
                     j: mat[i][j] * probIn[i] / probOut[j] for j in simbOut
                 } for i in simbIn
             }
         
-            return self.__matAPosteriori
+            return self.__aPosteriori
 
     @property
     def entropiaAPriori(self) -> float:
