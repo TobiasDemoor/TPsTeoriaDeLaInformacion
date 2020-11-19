@@ -1,7 +1,8 @@
 from math import log2
+import pandas as pd
 
 class Canal:
-    def __init__(self, simbIn: set, simbOut: set, mat: dict, probIn):
+    def __init__(self, simbIn: list, simbOut: list, mat: dict, probIn):
         self.simbIn = simbIn
         self.simbOut = simbOut
         self.mat = mat
@@ -69,23 +70,57 @@ class Canal:
     @property
     def probSimultaneas(self) -> dict:
         return {i: {j: self.probSimultanea(i,j) for j in self.simbOut} for i in self.simbIn}
+
+    def reportes(self) -> tuple:
+        probOut = pd.DataFrame({"P(i)":self.probOut}).transpose()
+        probOut = probOut[self.simbOut]
+
+        probAPriori = pd.DataFrame({"P(i):":self.aPriori}).transpose()
+        probAPriori = probAPriori[self.simbIn]
+
+        probAPost = pd.DataFrame(self.aPosteriori).transpose()
+        probAPost = probAPost[self.simbOut]
+        probAPost.reindex(self.simbIn)
+
+        probSimultaneas = pd.DataFrame(self.probSimultaneas).transpose()
+        probSimultaneas = probSimultaneas[self.simbOut]
+        probSimultaneas.reindex(self.simbIn)
+        
+        entropiaPriori = f"H(S) = {self.entropiaAPriori}"
+
+        entropiaPost = pd.DataFrame({"H(S)": self.entropiasAPosteriori}).transpose()
+        entropiaPost = entropiaPost[self.simbOut]
+
+        return (
+            "\nProbabilidades de salida\n", probOut,
+            "\n\n",
+            "\nProbabilidades a priori\n", probAPriori,
+            "\n\n",
+            "\nProbabilidades a posteriori\n", probAPost,
+            "\n\n",
+            "\nProbabilidades simultaneas\n", probSimultaneas,
+            "\n\n",
+            "\nEntropía a priori\n", entropiaPriori,
+            "\n\n",
+            "\nEntropía a posteriori\n", entropiaPost
+            )
+        
+        
     
 
 
 class CanalFactory:
     @staticmethod
     def fromMat(simbIn: list, simbOut: list, mat: list, probIn: list) -> Canal:
-        simbInSet = set(simbIn)
-        simbOutSet = set(simbOut)
 
         matC = {
             si: {
-                sj: mat[i][j] for j, sj in enumerate(simbOutSet)
-            } for i, si in enumerate(simbInSet)
+                sj: mat[i][j] for j, sj in enumerate(simbOut)
+            } for i, si in enumerate(simbIn)
         }
-        probInC = {si: probIn[i] for i, si in enumerate(simbInSet)}
+        probInC = {si: probIn[i] for i, si in enumerate(simbIn)}
 
-        return Canal(simbInSet, simbOutSet, matC, probInC)
+        return Canal(simbIn, simbOut, matC, probInC)
 
     @staticmethod
     def fromMuestras(entrada: str, salida: str) -> Canal:
@@ -109,3 +144,16 @@ class CanalFactory:
                     mat[i][j] /= sumas[i]
 
         return Canal(simbIn, simbOut, mat, probIn)
+
+
+simbIn = ["A1", "A2", "A3"]
+simbOut = ["b1", "b2", "b3", "b4"]
+mat = [
+    [0.25, 0.25, 0.25, 0.25],
+    [0.25, 0.25, 0, 0.5],
+    [0.5, 0, 0.5, 0]
+]
+probIn = [0.25, 0.25, 0.5]
+C1 = CanalFactory.fromMat(simbIn, simbOut, mat, probIn)
+
+print(*C1.reportes())
