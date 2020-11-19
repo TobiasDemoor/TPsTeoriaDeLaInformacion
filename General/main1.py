@@ -72,3 +72,4 @@ codigo = CodigoBloqueFactory.crear(
 )
 # codigo.reporte()[1].to_excel("1.xlsx")
 print(*codigo.reporte())
+

@@ -40,6 +40,14 @@ class CodigoBloque:
                 cod = ""
         return res
     
+    @property
+    def rendimiento(self):
+        return self.fuente.entropia()/self.longMedia()
+
+    @property
+    def redundancia(self):
+        return 1 - self.rendimiento()
+
     def longMedia(self):
         """Calcula la longitud media del Código Bloque"""
 
@@ -274,9 +282,3 @@ def codificaRLC(message: str):
     if ant != None:
         res += str(cant) + ant
     return res
-
-def rendimiento(codigo):
-    return codigo.fuente.entropia()/codigo.longMedia()
-
-def redundancia(codigo):
-    return 1 - rendimiento(codigo)
