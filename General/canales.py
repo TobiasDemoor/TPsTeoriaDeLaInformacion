@@ -144,16 +144,3 @@ class CanalFactory:
                     mat[i][j] /= sumas[i]
 
         return Canal(simbIn, simbOut, mat, probIn)
-
-
-simbIn = ["A1", "A2", "A3"]
-simbOut = ["b1", "b2", "b3", "b4"]
-mat = [
-    [0.25, 0.25, 0.25, 0.25],
-    [0.25, 0.25, 0, 0.5],
-    [0.5, 0, 0.5, 0]
-]
-probIn = [0.25, 0.25, 0.5]
-C1 = CanalFactory.fromMat(simbIn, simbOut, mat, probIn)
-
-print(*C1.reportes())

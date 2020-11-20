@@ -1,6 +1,5 @@
 from math import ceil
 from fuentesDeInfo import FuenteDeInfo, FuenteDeInfoFactory
-import re
 
 
 class CodigoBloque:
@@ -46,7 +45,7 @@ class CodigoBloque:
 
     @property
     def redundancia(self):
-        return 1 - self.rendimiento()
+        return 1 - self.rendimiento
 
     def longMedia(self):
         """Calcula la longitud media del Código Bloque"""
@@ -75,7 +74,8 @@ class CodigoBloque:
         longM = f"\nLongitud media: {self.longMedia()}"
         comp = f"\nEs compacto: {esCompacto(self)}"
         kraft = f"\nCumple Kraft: {cumpleKraft(self, 2)}"
-        return entropia, df, longM, comp, kraft
+        redun = f"\nRedundancia: {self.redundancia}"
+        return entropia, df, longM, comp, kraft, redun
 
 
 class CodigoBloqueFactory:
@@ -259,26 +259,29 @@ def esInstantaneo(codigoBloque: CodigoBloque) -> bool:
     return True
 
 
-def decoRLC(codificado: str):
+def decoRLC(codificado: bytes):
     res, i = "", 0
     while i < len(codificado):
-        cant = re.search(r'\d+', codificado[i:]).group()
-        i += len(cant)
-        c = codificado[i]
+        cant = int(codificado[i])
+        i += 1
+        c = chr(codificado[i])
         i += 1
         res += c * int(cant)
     return res
 
 
-def codificaRLC(message: str):
-    res, ant, cant = "", None, None
+def codificaRLC(message: str) -> bytes:
+    res, ant, cant = b'', None, None
     for c in message:
         if c != ant:
             if ant != None:
-                res += str(cant) + ant
+                res += bytes([cant, ord(ant)]) # + 48
             ant, cant = c, 1
         else:
             cant += 1
     if ant != None:
-        res += str(cant) + ant
+        res += bytes([cant, ord(ant)]) # + 48
     return res
+
+def nTasaCompresion(codOriginal, codComprimido):
+    return len(codOriginal)/len(codComprimido) 

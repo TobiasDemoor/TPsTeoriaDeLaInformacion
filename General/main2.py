@@ -1,11 +1,41 @@
 #################### Primera Parte ####################
+from fuentesDeInfo import FuenteDeInfo, FuenteDeInfoFactory
 from codificacion import CodigoBloque, CodigoBloqueFactory, codificaRLC, decoRLC
+"""
+    Hay que codificar ambas, para Huff y S-F hay que escribir la tabla de codigo bloque.
+    Para RLC hay que mostrar el código comprimido.
+"""
+
 
 # Fuente 1
 arch = open("mdp-espanol.txt", "r", encoding="utf-8")
+mensaje = arch.read()
+fuente = FuenteDeInfoFactory.fromMuestra(mensaje)
+huff1 = CodigoBloqueFactory.huffman(fuente)
+shan1 = CodigoBloqueFactory.shannonFano(fuente)
+rlc1 = codificaRLC(mensaje)
+
+# arch.close()
+# arch = open("res.txt", "w", encoding="utf-8")
+# arch.write("".join([chr(i) for i in rlc1]))
+print(*huff1.reporte())
+print(*shan1.reporte())
+arch.close()
 
 # Fuente 2
 arch = open("mdp-portugues.txt", "r", encoding="utf-8")
+mensaje = arch.read()
+fuente = FuenteDeInfoFactory.fromMuestra(mensaje)
+huff2 = CodigoBloqueFactory.huffman(fuente)
+shan2 = CodigoBloqueFactory.shannonFano(fuente)
+rlc2 = codificaRLC(mensaje)
+
+# arch.close()
+# arch = open("res2.txt", "w", encoding="utf-8")
+# arch.write("".join([chr(i) for i in rlc1]))
+print(*huff2.reporte())
+print(*shan2.reporte())
+arch.close()
 
 #################### Segunda Parte ####################
 from canales import Canal, CanalFactory
