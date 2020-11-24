@@ -51,8 +51,8 @@ markov2 = FuenteDeMarkov(
 
 # markov1.grafo.render("1", format="png")
 # markov2.grafo.render("2", format="png")
-print(markov1.entropia())
-print(markov2.entropia())
+print(markov1.entropia)
+print(markov2.entropia)
 
 # import sys
 # sys.exit(0)

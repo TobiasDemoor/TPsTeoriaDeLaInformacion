@@ -1,3 +1,4 @@
+from functools import cached_property
 from math import ceil
 from fuentesDeInfo import FuenteDeInfo, FuenteDeInfoFactory
 
@@ -14,6 +15,7 @@ class CodigoBloque:
 
         return self.codigos[id]
 
+    @cached_property
     def listaCodigos(self) -> list:
         """Retorna los códigos del código bloque en una lista"""
 
@@ -29,7 +31,7 @@ class CodigoBloque:
         return res
 
     def decodifica(self, codificado: str):
-        codigos = self.listaCodigos()
+        codigos = self.listaCodigos
         ids = list(self.codigos.keys())
         cod, res = "", ""
         for c in codificado:
@@ -39,14 +41,15 @@ class CodigoBloque:
                 cod = ""
         return res
     
-    @property
+    @cached_property
     def rendimiento(self):
-        return self.fuente.entropia()/self.longMedia()
+        return self.fuente.entropia/self.longMedia
 
-    @property
+    @cached_property
     def redundancia(self):
         return 1 - self.rendimiento
 
+    @cached_property
     def longMedia(self):
         """Calcula la longitud media del Código Bloque"""
 
@@ -71,7 +74,7 @@ class CodigoBloque:
         entropia, df = self.fuente.reporte()
         df.insert(1, "Codigo", list(
             map(lambda x: self.codigos[x], self.fuente.ids)))
-        longM = f"\nLongitud media: {self.longMedia()}"
+        longM = f"\nLongitud media: {self.longMedia}"
         comp = f"\nEs compacto: {esCompacto(self)}"
         kraft = f"\nCumple Kraft: {cumpleKraft(self, 2)}"
         redun = f"\nRedundancia: {self.redundancia}"
@@ -130,7 +133,7 @@ class CodigoBloqueFactory:
 
         fuente = codigoBloque.fuente
         idAnt = fuente.ids
-        codAnt = codigoBloque.listaCodigos()
+        codAnt = codigoBloque.listaCodigos
         probAnt = [fuente.prob(i) for i in fuente.ids]
         for _ in range(orden-1):
             ids, cods, probs = [], [], []
@@ -215,7 +218,7 @@ class CodigoBloqueFactory:
 
 def cumpleKraft(codigo: CodigoBloque, r: int) -> bool:
     suma = 0
-    for i in codigo.listaCodigos():
+    for i in codigo.listaCodigos:
         suma += r**-len(i)
         if round(suma, 2) > 1:
             return False
@@ -230,7 +233,7 @@ def esCompacto(codigo: CodigoBloque) -> bool:
 
 
 def esCodBloque(aCodigo: list, codigo: CodigoBloque) -> bool:
-    bloqueaux = codigo.listaCodigos()[:]
+    bloqueaux = codigo.listaCodigos[:]
     aaux = aCodigo[:]
     longmax = len(max(bloqueaux, key=len))
     it = 0
@@ -246,12 +249,12 @@ def esCodBloque(aCodigo: list, codigo: CodigoBloque) -> bool:
 
 
 def esNoSingular(codigoBloque: CodigoBloque) -> bool:
-    codigos = codigoBloque.listaCodigos()
+    codigos = codigoBloque.listaCodigos
     return len(set(codigos)) == len(codigos)
 
 
 def esInstantaneo(codigoBloque: CodigoBloque) -> bool:
-    codigos = codigoBloque.listaCodigos()
+    codigos = codigoBloque.listaCodigos
     for i, x in enumerate(codigos):
         for j, y in enumerate(codigos):
             if i != j and y.startswith(x):

@@ -1,3 +1,4 @@
+from functools import cached_property
 from random import random
 import pandas as pd
 from math import log2
@@ -39,6 +40,7 @@ class FuenteDeInfo:
             retorno = log2(1/p)
         return retorno
 
+    @cached_property
     def entropia(self) -> float:
         """Calcula la entropia de la fuente"""
 
@@ -57,7 +59,7 @@ class FuenteDeInfo:
             )
         """
 
-        return (f"\nH(S) = {self.entropia()}\n",
+        return (f"\nH(S) = {self.entropia}\n",
             pd.DataFrame({
                 "Símbolo": self.ids,
                 "Probabilidad": [self.probs[i] for i in self.ids],
