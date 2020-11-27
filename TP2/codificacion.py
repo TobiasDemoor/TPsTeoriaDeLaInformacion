@@ -47,8 +47,9 @@ class CodigoBloque:
             Calcula la tasa de compresión con un mensaje especifico, 
             codificandolo segun su codigo bloque
         """
-            
-        return len(mensaje)/len(self.codifica(mensaje))
+
+        # multiplicamos la longitud del mensaje por 8 porque compara longitudes en bits
+        return len(mensaje)*8/len(self.codifica(mensaje))
 
     @cached_property
     def longMedia(self):
@@ -76,10 +77,10 @@ class CodigoBloque:
         df.insert(1, "Codigo", list(
             map(lambda x: self.codigos[x], self.fuente.ids)))
         return (
-            "\n\n", entropia, "\n",
-            "\n\n", df, "\n",
+            entropia,
+            "\n\n", df,
             f"\n\nRedundancia: {self.redundancia}",
-            f"\n\nRendimiento: {self.rendimiento}"
+            f"\n\nRendimiento: {self.rendimiento}\n",
         )
 
 

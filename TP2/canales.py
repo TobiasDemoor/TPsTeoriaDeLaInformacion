@@ -131,7 +131,7 @@ class Canal:
     def entropiaB(self) -> float:
         return self.canalInverso.entropiaAPriori
 
-    def reportes(self) -> tuple:
+    def reporte(self) -> tuple:
         probOut = pd.DataFrame({"P(b)":self.probOut}).transpose()
         probOut = probOut[self.simbOut]
 

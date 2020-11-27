@@ -66,7 +66,13 @@ class FuenteDeInfo:
 
 
 class FuenteDeInfoFactory:
-
+    @staticmethod
+    def crear(ids, probs):
+        """Genera un objeto FuenteDeInfo a partir de sus ids y sus probabilidades absolutas"""
+        
+        dprobs = {i: j for i, j in zip(ids, probs)}
+        return FuenteDeInfo(ids, dprobs)
+        
     @staticmethod
     def fromMuestra(muestra):
         """Genera un objeto FuenteDeInfo a partir de una muestra"""
