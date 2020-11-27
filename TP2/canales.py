@@ -12,7 +12,7 @@ class Canal:
     @cached_property
     def probOut(self) -> dict:
         """Calcula la probabilidad de salida"""
-        
+
         return {
             j: sum(
                 [ self.mat[i][j] * self.probIn[i] for i in self.simbIn ]
@@ -22,7 +22,7 @@ class Canal:
     @cached_property
     def aPriori(self) -> dict:
         """Devuelve la probabilidad de entrada"""
-        
+
         return self.probIn
 
     @cached_property
@@ -71,13 +71,13 @@ class Canal:
     
     def probSimultanea(self, a: str, b: str) -> float:
         """Calcula probabilidad mutua P(a, b)"""
-       
+
         return self.mat[a][b] * self.probIn[a]
     
     @cached_property
     def probSimultaneas(self) -> dict:
-        """Calcula las probabilidad mutuas"""
-
+        """Calcula la equivocación del canal"""
+        
         return {
             i: {
                 j: self.probSimultanea(i,j) for j in self.simbOut
@@ -108,10 +108,6 @@ class Canal:
         return Canal(self.probOut, self.probIn, mat, self.probOut)
 
     @cached_property
-    def perdida(self) -> float:
-        return self.canalInverso.equivocacion
-
-    @cached_property
     def infMutua(self) -> float:
         """Devuelve la información mutua I(A, B)"""
 
@@ -128,17 +124,8 @@ class Canal:
     @cached_property
     def infMutuaInversa(self) -> float:
         """Devuelve la información mutua I(B, A)"""
-        
-        return self.canalInverso.infMutua
 
-    @cached_property
-    def entropiaAFin(self) -> float:
-        res = 0
-        for i in self.simbIn:
-            for j in self.simbOut:
-                if self.probSimultaneas[i][j] != 0:
-                    res += self.probSimultaneas[i][j] * -log2(self.probSimultaneas[i][j])
-        return res
+        return self.canalInverso.infMutua
 
     @cached_property
     def entropiaB(self) -> float:
@@ -171,8 +158,6 @@ class Canal:
             f"\n\nEntropía a priori = H(A) = {self.entropiaAPriori}",
             f"\n\nEquivocación = H(A/B) = {self.equivocacion} (RUIDO)",
             f"\n\nH(B) = {self.entropiaB}",
-            f"\n\nH(B/A) = {self.perdida} (PERDIDA)",
-            f"\n\nEntropía a fin = H(A,B) = {self.entropiaAFin}",
             f"\n\nInformación mutua = I(A,B) = {self.infMutua}",
             f"\n\nI(A,B) = {self.infMutua} ≥ 0",
             f"\n\nI(B,A) = {self.infMutuaInversa} = I(A,B) = {self.infMutua}"
@@ -192,27 +177,3 @@ class CanalFactory:
         probInC = {si: probIn[i] for i, si in enumerate(simbIn)}
 
         return Canal(simbIn, simbOut, matC, probInC)
-
-    @staticmethod
-    def fromMuestras(entrada: str, salida: str) -> Canal:
-        """Retorna un objeto canal a partir de dos muestras"""
-        simbIn = sorted(set(entrada))
-        simbOut = sorted(set(salida))
-
-        suma = len(entrada)
-        probIn = {i: entrada.count(i)/suma for i in simbIn}
-
-        sumas = {i: 0 for i in simbIn}
-        mat = {i: {j: 0 for j in simbOut} for i in simbIn}
-
-        for ind, j in enumerate(salida):
-            i = entrada[ind]
-            mat[i][j] += 1
-            sumas[i] += 1
-
-        for i in simbIn:
-            if sumas[i] != 0:
-                for j in simbOut:
-                    mat[i][j] /= sumas[i]
-
-        return Canal(simbIn, simbOut, mat, probIn)

@@ -1,11 +1,10 @@
 #################### Primera Parte ####################
 from fuentesDeInfo import FuenteDeInfo, FuenteDeInfoFactory
-from codificacion import CodigoBloque, CodigoBloqueFactory, codificaRLC, decoRLC
+from codificacion import CodigoBloque, CodigoBloqueFactory, codificaRLC, nTasaDeCompresion
 """
     Hay que codificar ambas, para Huff y S-F hay que escribir la tabla de codigo bloque.
     Para RLC hay que mostrar el código comprimido.
 """
-
 
 # Fuente 1
 arch = open("mdp-espanol.txt", "r", encoding="utf-8")
@@ -13,14 +12,18 @@ mensaje = arch.read()
 fuente = FuenteDeInfoFactory.fromMuestra(mensaje)
 huff1 = CodigoBloqueFactory.huffman(fuente)
 shan1 = CodigoBloqueFactory.shannonFano(fuente)
-rlc1 = codificaRLC(mensaje)
-
-# arch.close()
-# arch = open("res.txt", "w", encoding="utf-8")
-# arch.write("".join([chr(i) for i in rlc1]))
-print(*huff1.reporte())
-print(*shan1.reporte())
 arch.close()
+
+rlc1 = codificaRLC(mensaje, True)
+# se escribe el resultado en el archivo rlc1.txt
+arch = open("rlc1.txt", "w", encoding="utf-8")
+arch.write(rlc1)
+arch.close()
+print(f"Tasa de compresion RLC: {nTasaDeCompresion(mensaje, rlc1)}:1")
+print(*huff1.reporte())
+print(f"Tasa de compresion Huffman: {huff1.nTasaDeCompresion(mensaje)}:1")
+print(*shan1.reporte())
+print(f"Tasa de compresion Shannon-Fano: {shan1.nTasaDeCompresion(mensaje)}:1")
 
 # Fuente 2
 arch = open("mdp-portugues.txt", "r", encoding="utf-8")
@@ -28,14 +31,19 @@ mensaje = arch.read()
 fuente = FuenteDeInfoFactory.fromMuestra(mensaje)
 huff2 = CodigoBloqueFactory.huffman(fuente)
 shan2 = CodigoBloqueFactory.shannonFano(fuente)
-rlc2 = codificaRLC(mensaje)
-
-# arch.close()
-# arch = open("res2.txt", "w", encoding="utf-8")
-# arch.write("".join([chr(i) for i in rlc1]))
-print(*huff2.reporte())
-print(*shan2.reporte())
 arch.close()
+
+rlc2 = codificaRLC(mensaje, True)
+# se escribe el resultado en el archivo rlc2.txt
+arch = open("rlc2.txt", "w", encoding="utf-8")
+arch.write(rlc2)
+arch.close()
+
+print(f"Tasa de compresion RLC: {nTasaDeCompresion(mensaje, rlc2)}:1")
+print(*huff2.reporte())
+print(f"Tasa de compresion Huffman: {huff2.nTasaDeCompresion(mensaje)}:1")
+print(*shan2.reporte())
+print(f"Tasa de compresion Shannon-Fano: {shan2.nTasaDeCompresion(mensaje)}:1")
 
 #################### Segunda Parte ####################
 from canales import Canal, CanalFactory
