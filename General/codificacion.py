@@ -34,7 +34,7 @@ class CodigoBloque:
 
     def decodifica(self, codificado: str):
         codigos = self.listaCodigos
-        ids = list(self.codigos.keys())
+        ids = list(self.codigos)
         cod, res = "", ""
         for c in codificado:
             cod += c
@@ -86,8 +86,7 @@ class CodigoBloque:
         """
 
         entropia, df = self.fuente.reporte()
-        df.insert(1, "Codigo", list(
-            map(lambda x: self.codigos[x], self.fuente.ids)))
+        df.insert(1, "Codigo", [self.codigos[x] for x in self.fuente.ids])
        
         return (
             "\n\n", entropia, "\n",
@@ -170,10 +169,9 @@ class CodigoBloqueFactory:
 
     @staticmethod
     def __huffmanRec(probs: dict) -> dict:
-        orden = list(probs.keys())
-        l = len(orden)
-        if l > 2:
-            orden.sort(reverse=True, key=lambda x: probs[x])
+        l = len(probs)
+        orden = sorted(probs, reverse=True, key=lambda x: probs[x])
+        if l > 1:
             combinados = (orden[-2], orden[-1])
             # modifico el dict de probabilidad para pasarlo al paso siguiente
             probs[combinados[0]] = probs[combinados[0]] + probs[combinados[1]]
@@ -183,10 +181,7 @@ class CodigoBloqueFactory:
             res[combinados[0]] = codComb + "1"
             res[combinados[1]] = codComb + "0"
         else:
-            if l == 2:
-                res = {orden[0]: "1", orden[1]: "0"}
-            else:
-                res = {orden[0]: "" }
+            res = {orden[0]: "" }
         return res
 
     @staticmethod
@@ -197,10 +192,9 @@ class CodigoBloqueFactory:
 
     @staticmethod
     def __shannonFanoRec(probs: dict, tope: float) -> dict:
-        orden = list(probs.keys())
-        orden.sort(reverse=True, key=lambda x: probs[x])
-        l = len(orden)
-        if l > 2:
+        l = len(probs)
+        orden = sorted(probs, reverse=True, key=lambda x: probs[x])
+        if l > 1:
             sumaAux = 0
             t, suma = -1, 0
             dif, minimo = 1, 2
@@ -214,17 +208,14 @@ class CodigoBloqueFactory:
             mayoresDict = {orden[k]: probs[orden[k]] for k in range(t, l)}
             res = {}
             resAux = CodigoBloqueFactory.__shannonFanoRec(menoresDict, sumaAux)
-            for k, v in list(resAux.items()):
+            for k, v in resAux.items():
                 res[k] = "1" + v
 
             resAux = CodigoBloqueFactory.__shannonFanoRec(mayoresDict, tope - sumaAux)
-            for k, v in list(resAux.items()):
+            for k, v in resAux.items():
                 res[k] = "0" + v
         else:
-            if l == 2:
-                res = {orden[0]: "1", orden[1]: "0"}
-            else:
-                res = {orden[0]: "" }
+            res = {orden[0]: "" }
         return res
 
 

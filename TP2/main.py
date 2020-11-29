@@ -1,6 +1,11 @@
 #################### Primera Parte ####################
 from fuentesDeInfo import FuenteDeInfo, FuenteDeInfoFactory
 from codificacion import CodigoBloque, CodigoBloqueFactory, codificaRLC, nTasaDeCompresion
+
+# habilita que se muestren todas las lineas de las tablas en la consola
+import pandas
+pandas.set_option('display.max_rows', None)
+
 """
     Hay que codificar ambas, para Huff y S-F hay que escribir la tabla de codigo bloque.
     Para RLC hay que mostrar el código comprimido.

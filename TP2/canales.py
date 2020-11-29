@@ -117,7 +117,7 @@ class Canal:
             for j in self.simbOut:
                 if probSim[i][j] != 0:
                     res += probSim[i][j] * log2(
-                        probSim[i][j] / ( self.aPriori[i] * self.probOut[j] )
+                        probSim[i][j] / ( self.probIn[i] * self.probOut[j] )
                     )
         return res
     
