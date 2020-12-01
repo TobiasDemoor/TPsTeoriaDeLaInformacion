@@ -82,3 +82,21 @@ mat = [
     [1.0, 0.0, 0.0]
 ]
 canal3 = CanalFactory.fromMat(simbIn, simbOut, mat, probIn)
+
+
+# rep = [canal1.reporte(), canal2.reporte(), canal3.reporte()]
+# nomb = {
+#     1:"Probabilidades de salida",
+#     4:"Probabilidades a priori",
+#     7:"Probabilidades a posteriori",
+#     10:"Probabilidades simultaneas",
+#     13:"Entropía a posteriori",   
+# }
+# for i, r in enumerate(rep):
+#     for j in [1,4,7,10,13]:
+#         r[j].to_excel(f'canal{i}{nomb[j]}.xlsx')
+
+# huff1.reporte()[2].to_excel('huff1.xlsx')
+# shan1.reporte()[2].to_excel('shan1.xlsx')
+# huff2.reporte()[2].to_excel('huff2.xlsx')
+# shan2.reporte()[2].to_excel('shan2.xlsx')

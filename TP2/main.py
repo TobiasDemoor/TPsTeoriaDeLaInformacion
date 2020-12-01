@@ -57,19 +57,22 @@ print(f"Tasa de compresion Shannon-Fano: {shan2.nTasaDeCompresion(mensaje):.2f}:
 from canales import Canal, CanalFactory
 
 # Canal 1
+print("***** Canal 1 *****")
+
 simbIn = ["A1", "A2"]
 simbOut = ["B1", "B2", "B3", "B4", "B5"]
-probIn = [0.2, 0.2]
+probIn = [0.2, 0.8]
 mat = [
     [0.2, 0.2, 0.2, 0.2, 0.2],
     [0.9, 0.1, 0.0, 0.0, 0.0]
 ]
 canal1: Canal = CanalFactory.fromMat(simbIn, simbOut, mat, probIn)
 
-print("***** Canal 1 *****")
 print(*canal1.reporte())
 
 # Canal 2
+print("***** Canal 2 *****")
+
 simbIn = ["A1", "A2", "A3", "A4", "A5"]
 simbOut = ["B1", "B2", "B3", "B4", "B5"]
 probIn = [0.2, 0.1, 0.3, 0.1, 0.3]
@@ -82,10 +85,11 @@ mat = [
 ]
 canal2: Canal = CanalFactory.fromMat(simbIn, simbOut, mat, probIn)
 
-print("***** Canal 2 *****")
 print(*canal2.reporte())
 
 # Canal 3
+print("***** Canal 3 *****")
+
 simbIn = ["A1", "A2", "A3", "A4"]
 simbOut = ["B1", "B2", "B3"]
 probIn = [0.1, 0.1, 0.4, 0.4]
@@ -97,23 +101,4 @@ mat = [
 ]
 canal3: Canal = CanalFactory.fromMat(simbIn, simbOut, mat, probIn)
 
-print("***** Canal 3 *****")
 print(*canal3.reporte())
-
-
-# rep = [canal1.reporte(), canal2.reporte(), canal3.reporte()]
-# nomb = {
-#     1:"Probabilidades de salida",
-#     4:"Probabilidades a priori",
-#     7:"Probabilidades a posteriori",
-#     10:"Probabilidades simultaneas",
-#     13:"Entropía a posteriori",   
-# }
-# for i, r in enumerate(rep):
-#     for j in [1,4,7,10,13]:
-#         r[j].to_excel(f'canal{i}{nomb[j]}.xlsx')
-
-# huff1.reporte()[2].to_excel('huff1.xlsx')
-# shan1.reporte()[2].to_excel('shan1.xlsx')
-# huff2.reporte()[2].to_excel('huff2.xlsx')
-# shan2.reporte()[2].to_excel('shan2.xlsx')

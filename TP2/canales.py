@@ -88,12 +88,11 @@ class Canal:
     def equivocacion(self) -> float:
         """Calcula la equivocación del canal"""
 
-        probSim = self.probSimultaneas
         res = 0
         for i in self.simbIn:
             for j in self.simbOut:
-                if probSim[i][j] != 0:
-                    res += probSim[i][j] * -log2(probSim[i][j])
+                if self.probSimultaneas[i][j] != 0:
+                    res += self.probSimultaneas[i][j] * -log2(self.aPosteriori[i][j])
         return res
 
     @cached_property
