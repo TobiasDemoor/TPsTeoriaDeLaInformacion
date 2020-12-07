@@ -136,7 +136,7 @@ class Canal:
         entropiaPost = entropiaPost[self.simbOut]
 
         return (
-            "\n\nProbabilidades a priori\n", probAPriori, "\n",
+            "\nProbabilidades a priori\n", probAPriori, "\n",
             "\n\nProbabilidades a posteriori P(ai/bj)\n", probAPost, "\n",
             "\n\nEntropía a posteriori\n", entropiaPost, "\n",
             f"\n\nEntropía a priori = H(A) = {self.entropiaAPriori}",

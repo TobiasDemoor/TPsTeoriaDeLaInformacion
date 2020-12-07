@@ -8,76 +8,63 @@ class CodigoBloque:
         self.fuente = fuente
         self.codigos = codigos
 
-    def codigo(self, id) -> str:
-        """Retorna el código asociado a un símbolo id"""
-
-        return self.codigos[id]
-
-    @cached_property
-    def listaCodigos(self) -> list:
-        """Retorna los códigos del código bloque en una lista"""
-
-        return list(self.codigos.values())
-
-    def codifica(self, mensaje: str) -> str:
-        """Codifica un mensaje a con el código bloque"""
-
-        res = ""
-        for c in mensaje.lower():
-            if c in self.fuente.ids:
-                res += self.codigo(c)
-            else:
-                raise Exception(f"El simbolo {c} no existe en el CodigoBloque")
-        return res
-    
-    @cached_property
-    def rendimiento(self):
-        """Calcula el rendimiento de la codificación"""
-        
-        return self.fuente.entropia/self.longMedia
-
-    @cached_property
-    def redundancia(self):
-        """Calcula el redundancia de la codificación"""
-        
-        return 1 - self.rendimiento
-    
-    def nTasaDeCompresion(self, mensaje: str) -> float:
-        """
-            Calcula la tasa de compresión con un mensaje especifico, 
-            codificandolo segun su codigo bloque
-        """
-
-        # multiplicamos la longitud del mensaje por 8 porque compara longitudes en bits
-        return len(mensaje)*8/len(self.codifica(mensaje))
-
     @cached_property
     def longMedia(self):
-        """Calcula la longitud media del Código Bloque"""
+        """Retorna la longitud media del Código Bloque"""
 
         res = 0
         for i in self.fuente.ids:
             res += self.fuente.prob(i) * len(self.codigos[i])
         return res
 
+    def codifica(self, mensaje: str) -> str:
+        """Retorna el mensaje codifica con el código bloque"""
+
+        res = ""
+        for c in mensaje.lower():
+            if c in self.fuente.ids:
+                res += self.codigos[c]
+            else:
+                raise Exception(f"El simbolo {c} no existe en el CodigoBloque")
+        return res
+    
+    @cached_property
+    def rendimiento(self):
+        """Retorna el rendimiento de la codificación"""
+        
+        return self.fuente.entropia/self.longMedia
+
+    @cached_property
+    def redundancia(self):
+        """Retorna el redundancia de la codificación"""
+        
+        return 1 - self.rendimiento
+    
+    def nTasaDeCompresion(self, mensaje: str) -> float:
+        """
+            Retorna la tasa de compresión con un mensaje especifico, 
+            codificandolo segun su codigo bloque
+        """
+
+        # multiplicamos la longitud del mensaje por 8 porque compara longitudes en bits
+        return len(mensaje)*8/len(self.codifica(mensaje))
+
+
     def reporte(self) -> tuple:
         """
             Genera un reporte del Código Bloque
             Retorna una tupla como al siguiente
             (
-                reporte entropia de la fuente: string,
                 tabla de reporte por simbolo: pandas.Dataframe,
-                reporte de longitud media: string,
-                reporte de si es compacto: string,
-                reporte de si cumple la inecuación de kraft: string
+                reporte de rendimiento: string,
+                reporte de redundancia: string,
             )
         """
 
-        entropia, df = self.fuente.reporte()
+        df = self.fuente.reporte()
         df.insert(1, "Codigo", [self.codigos[x] for x in self.fuente.ids])
         return (
-            entropia,
-            "\n\n", df,
+            "\n", df,
             f"\n\nRedundancia: {self.redundancia}",
             f"\n\nRendimiento: {self.rendimiento}\n",
         )

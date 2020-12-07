@@ -14,24 +14,10 @@ class FuenteDeInfo:
         """Retorna la probabilidad de un símbolo id"""
         return self.probs[id]
 
-    def __inversa(self, prob):
-        acum = 0
-        for i in self.ids:
-            acum += self.prob(i)
-            if acum > prob:
-                return i
-
-        return self.ids[-1]
-
-    def simulacion(self, n):
-        """Genera una colección de valores a partir de una lista de probabilidades"""
-
-        return [self.__inversa(random()) for _ in range(n)]
-
     def cantInformacion(self, id) -> float:
         """Calcula la cantidad de información en bits de un dato dado"""
 
-        p = self.prob(id)
+        p = self.probs[id]
         if p == 0:
             retorno = 0
         else:
@@ -44,25 +30,20 @@ class FuenteDeInfo:
 
         ent = 0
         for i in self.ids:
-            ent += self.prob(i)*self.cantInformacion(i)
+            ent += self.probs[i]*self.cantInformacion(i)
         return ent
 
-    def reporte(self) -> tuple:
+    def reporte(self) -> pd.DataFrame:
         """
             Genera un reporte de la fuente
-            Retorna una tupla como al siguiente
-            (
-                reporte entropia: string,
-                tabla de reporte por simbolo: pandas.Dataframe
-            )
+            Retorna una tabla de reporte por simbolo: pandas.Dataframe
         """
 
-        return (f"\nH(S) = {self.entropia}\n",
-            pd.DataFrame({
+        return pd.DataFrame({
                 "Símbolo": self.ids,
                 "Probabilidad": [self.probs[i] for i in self.ids],
                 "Información": [self.cantInformacion(i) for i in self.ids]
-            }))
+            })
 
 
 class FuenteDeInfoFactory:
