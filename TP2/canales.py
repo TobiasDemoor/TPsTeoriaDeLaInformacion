@@ -11,90 +11,98 @@ class Canal:
         
     @cached_property
     def probOut(self) -> dict:
-        """Calcula la probabilidad de salida"""
+        """Retorna la probabilidad de salida P(bj)"""
 
         return {
-            j: sum(
-                [ self.mat[i][j] * self.probIn[i] for i in self.simbIn ]
-            ) for j in self.simbOut
+            bj: sum(
+                [ self.mat[ai][bj] * self.probIn[ai] for ai in self.simbIn ]
+            ) for bj in self.simbOut
         }
 
     @cached_property
     def aPriori(self) -> dict:
-        """Devuelve la probabilidad de entrada"""
+        """Retorna la probabilidad aPriori osea la probabilidad de entrada P(ai)"""
 
         return self.probIn
 
     @cached_property
     def aPosteriori(self) -> dict:
-        """Calcula la matriz de probabilidades a posteriori (ai/bi)"""
-
-        simbIn = self.simbIn
-        simbOut = self.simbOut
-        probIn = self.probIn
-        probOut = self.probOut
-        mat = self.mat
+        """Retorna la matriz de probabilidades a posteriori P(ai/bj)"""
 
         return {
-            i: {
-                j: mat[i][j] * probIn[i] / probOut[j] for j in simbOut
-            } for i in simbIn
+            ai: {
+                bj: self.mat[ai][bj] * self.probIn[ai] / self.probOut[bj]
+                    for bj in self.simbOut
+            } for ai in self.simbIn
         }
 
     @cached_property
     def entropiaAPriori(self) -> float:
-        """Calcula la entropía a priori"""
+        """Retorna la entropía a priori H(A)"""
 
         entropia = 0
-        for i in self.simbIn:
-            if self.probIn[i] != 0:
-                entropia += -self.probIn[i] * log2(self.probIn[i])
+        for ai in self.simbIn:
+            if self.probIn[ai] != 0:
+                entropia += -self.probIn[ai] * log2(self.probIn[ai])
+
         return entropia
 
-    def entropiaAPosteriori(self, j: str) -> float:
-        """Calcula la entropía a posteriori habiendo salido el simbolo j"""
+    def entropiaAPosteriori(self, bj: str) -> float:
+        """Retorna la entropía a posteriori habiendo salido el simbolo bj H(A/bj)"""
 
         entropia = 0
-        probAPost = self.aPosteriori
-        for i in self.simbIn:
-            if probAPost[i][j] != 0:
-                entropia += -probAPost[i][j] * log2(probAPost[i][j]) 
+        for ai in self.simbIn:
+            if self.aPosteriori[ai][bj] != 0:
+                entropia += -self.aPosteriori[ai][bj] * log2(self.aPosteriori[ai][bj]) 
         return entropia
     
     @cached_property
     def entropiasAPosteriori(self) -> dict:
-        """Calcula las entropías a posteriori"""
+        """Retorna las entropías a posteriori H(A/bj) para todo bj"""
 
         return {
-            j: self.entropiaAPosteriori(j) for j in self.simbOut
+            bj: self.entropiaAPosteriori(bj) for bj in self.simbOut
         }
     
-    def probSimultanea(self, a: str, b: str) -> float:
-        """Calcula probabilidad mutua P(a, b)"""
+    def probSimultanea(self, ai: str, bj: str) -> float:
+        """Retorna probabilidad simultanea P(ai, bj)"""
 
-        return self.mat[a][b] * self.probIn[a]
+        return self.mat[ai][bj] * self.probIn[ai]
     
     @cached_property
     def probSimultaneas(self) -> dict:
-        """Calcula la equivocación del canal"""
+        """Retorna todas las probabilidades simultaneas P(ai, bj) para todo par ai, bj"""
         
         return {
-            i: {
-                j: self.probSimultanea(i,j) for j in self.simbOut
-            } for i in self.simbIn
+            ai: {
+                bj: self.probSimultanea(ai,bj) for bj in self.simbOut
+            } for ai in self.simbIn
         }
 
     @cached_property
     def equivocacion(self) -> float:
-        """Calcula la equivocación del canal"""
+        """Retorna la equivocación del canal"""
 
         res = 0
-        for i in self.simbIn:
-            for j in self.simbOut:
-                if self.probSimultaneas[i][j] != 0:
-                    res += self.probSimultaneas[i][j] * -log2(self.aPosteriori[i][j])
+        for ai in self.simbIn:
+            for bj in self.simbOut:
+                if self.probSimultaneas[ai][bj] != 0:
+                    res += self.probSimultaneas[ai][bj] * -log2(self.aPosteriori[ai][bj])
         return res
 
+    @cached_property
+    def infMutua(self) -> float:
+        """Retorna la información mutua I(A, B)"""
+
+        res = 0
+        for ai in self.simbIn:
+            for bj in self.simbOut:
+                if self.probSimultaneas[ai][bj] != 0:
+                    res += self.probSimultaneas[ai][bj] * log2(
+                        self.probSimultaneas[ai][bj] / ( self.probIn[ai] * self.probOut[bj] )
+                    )
+        return res
+    
     @cached_property
     def canalInverso(self) -> object:
         """
@@ -103,62 +111,37 @@ class Canal:
             y las probabilidades a priori respectivamente.
         """    
 
-        mat = { j: { i: self.aPosteriori[i][j] for i in self.simbIn } for j in self.simbOut }
+        mat = {
+            bj: {
+                ai: self.aPosteriori[ai][bj] for ai in self.simbIn
+            } for bj in self.simbOut
+        }
         return Canal(self.probOut, self.probIn, mat, self.probOut)
 
     @cached_property
-    def infMutua(self) -> float:
-        """Devuelve la información mutua I(A, B)"""
-
-        probSim = self.probSimultaneas
-        res = 0
-        for i in self.simbIn:
-            for j in self.simbOut:
-                if probSim[i][j] != 0:
-                    res += probSim[i][j] * log2(
-                        probSim[i][j] / ( self.probIn[i] * self.probOut[j] )
-                    )
-        return res
-    
-    @cached_property
     def infMutuaInversa(self) -> float:
-        """Devuelve la información mutua I(B, A)"""
+        """Retorna la información mutua del canal inverso I(B, A)"""
 
         return self.canalInverso.infMutua
 
-    @cached_property
-    def entropiaB(self) -> float:
-        return self.canalInverso.entropiaAPriori
-
     def reporte(self) -> tuple:
-        probOut = pd.DataFrame({"P(b)":self.probOut}).transpose()
-        probOut = probOut[self.simbOut]
-
-        probAPriori = pd.DataFrame({"P(a):":self.aPriori}).transpose()
+        probAPriori = pd.DataFrame({"P(ai):":self.aPriori}).transpose()
         probAPriori = probAPriori[self.simbIn]
 
         probAPost = pd.DataFrame(self.aPosteriori).transpose()
         probAPost = probAPost[self.simbOut]
         probAPost.reindex(self.simbIn)
 
-        probSimultaneas = pd.DataFrame(self.probSimultaneas).transpose()
-        probSimultaneas = probSimultaneas[self.simbOut]
-        probSimultaneas.reindex(self.simbIn)
-
         entropiaPost = pd.DataFrame({"H(A/bj)": self.entropiasAPosteriori}).transpose()
         entropiaPost = entropiaPost[self.simbOut]
 
         return (
-            "\n\nProbabilidades de salida\n", probOut, "\n",
             "\n\nProbabilidades a priori\n", probAPriori, "\n",
-            "\n\nProbabilidades a posteriori\n", probAPost, "\n",
-            "\n\nProbabilidades simultaneas\n", probSimultaneas, "\n",
+            "\n\nProbabilidades a posteriori P(ai/bj)\n", probAPost, "\n",
             "\n\nEntropía a posteriori\n", entropiaPost, "\n",
             f"\n\nEntropía a priori = H(A) = {self.entropiaAPriori}",
             f"\n\nEquivocación = H(A/B) = {self.equivocacion} (RUIDO)",
-            f"\n\nH(B) = {self.entropiaB}",
-            f"\n\nInformación mutua = I(A,B) = {self.infMutua}",
-            f"\n\nI(A,B) = {self.infMutua} ≥ 0",
+            f"\n\nInformación mutua = I(A,B) = {self.infMutua} ≥ 0",
             f"\n\nI(B,A) = {self.infMutuaInversa} = I(A,B) = {self.infMutua}"
         )
         
@@ -169,10 +152,10 @@ class CanalFactory:
     def fromMat(simbIn: list, simbOut: list, mat: list, probIn: list) -> Canal:
         """Retorna un objeto Canal a partir de la matriz de probabilidades"""
         matC = {
-            si: {
-                sj: mat[i][j] for j, sj in enumerate(simbOut)
-            } for i, si in enumerate(simbIn)
+            ai: {
+                bj: mat[i][j] for j, bj in enumerate(simbOut)
+            } for i, ai in enumerate(simbIn)
         }
-        probInC = {si: probIn[i] for i, si in enumerate(simbIn)}
+        probInC = {ai: probIn[i] for i, ai in enumerate(simbIn)}
 
         return Canal(simbIn, simbOut, matC, probInC)
