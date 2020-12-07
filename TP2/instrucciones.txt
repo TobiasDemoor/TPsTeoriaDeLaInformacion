@@ -1,0 +1,15 @@
+Prerequisitos:
+    * tener python3 instalado
+        (verificar con $ python3 --version) (instalar con $ sudo apt install python3)
+    * tener pip3 instalado
+        (verificar con $ pip3 --version) (instalar con $ sudo apt install python3-pip)
+
+
+En una instancia de consola se situan en el directorio del proyecto (TP2) y ejecutan
+los siguientes comandos:
+
+(para instalar las dependencias)
+$ pip3 install -r requirements.txt
+
+(para ejecutar el código una vez instaladas las dependencias)
+$ python3 main.py
